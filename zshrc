@@ -9,8 +9,7 @@ export ZSH="/home/th/.oh-my-zsh"
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 # ZSH_THEME="robbyrussell"
-ZSH_THEME="avit"
-
+ZSH_THEME="bira"
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
@@ -98,10 +97,20 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
-
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+PATH=$PATH:/home/th/bin
+export PATH
+cat ~/banner.txt
+alias clear="clear && cat ~/banner.txt"
+alias cls="clear"
+alias wksp="cd ~/Documents/WorkSpace"
+alias homen="ssh pi@nas.titaniumhocker.ru"
+alias nic="ssh h904148890@ssh.h904148890.nichost.ru"
+alias vds="ssh th@vds.logovo.cloud"
+alias digs="dig +short"
+alias sdct="ssh th@sdct.ru"
+alias hostfm-tunnel="sudo ssh -fNL 127.0.0.2:80:localhost:5565 h904148890@ssh.h904148890.nichost.ru"
+alias json="python3 -m json.tool"
+alias tmm="tmux new-session -s main"
+alias tmd="tmux new-session -s dev"
+alias tmb="tmux new-session -s dbg"
+alias flask-ngrok="ngrok http 5000 -region eu"
