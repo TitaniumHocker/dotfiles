@@ -27,6 +27,9 @@ Plug 'stevearc/vim-arduino'
 " Additional python support
 Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
 
+" NGINX Syntax
+Plug 'chr4/nginx.vim'
+
 " Initialize plugin system
 call plug#end()
 
