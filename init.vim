@@ -13,7 +13,7 @@ Plug 'nightsense/carbonized'
 
 " Autocomplete plugin
 Plug 'ycm-core/YouCompleteMe'
-" Plug 'davidhalter/jedi-vim'
+Plug 'davidhalter/jedi-vim'
 
 " Jinja support plugin
 Plug 'lepture/vim-jinja'
@@ -41,6 +41,10 @@ set shiftwidth=4
 set tabstop=4
 syntax on
 set mouse=a
+
+" Pymode config
+let g:python3_host_prog = '/usr/local/bin/python3.8'
+let g:pymode_lint_options_pyflakes = {'ignore':'W0404'}
 
 " Tab = 4 space for html, css, jinja files
 autocmd FileType html setlocal shiftwidth=2 softtabstop=2
