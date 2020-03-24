@@ -9,7 +9,10 @@ Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 
 " Color schemes
 Plug 'morhetz/gruvbox'
-Plug 'nightsense/carbonized'
+Plug 'ayu-theme/ayu-vim'
+Plug 'tomasr/molokai'
+Plug 'fmoralesc/molokayo'
+Plug 'junegunn/seoul256.vim'
 
 " Autocomplete plugin
 Plug 'ycm-core/YouCompleteMe'
@@ -43,22 +46,37 @@ syntax on
 set mouse=a
 
 " Pymode config
-let g:python3_host_prog = '/usr/local/bin/python3.8'
+let g:python3_host_prog = '/usr/sbin/python3'
 let g:pymode_lint_options_pyflakes = {'ignore':'W0404'}
+let g:pymode_lint_options_pep8 = {'ignore':'E501'}
 
 " Tab = 4 space for html, css, jinja files
 autocmd FileType html setlocal shiftwidth=2 softtabstop=2
 autocmd FileType jinja.html setlocal shiftwidth=2 softtabstop=2
 autocmd FileType css setlocal shiftwidth=2 softtabstop=2
 
+" GruvBox color scheme settings
+"colorscheme gruvbox
+"set background=dark
+"let g:gruvbox_contrast_dark = 'soft'
 
-colorscheme gruvbox
-set background=dark
-let g:gruvbox_contrast_dark = 'soft'
+" Ayu color scheme settings
+"set termguicolors     " enable true colors support
+"let ayucolor="light"  " for light version of theme
+"let ayucolor="mirage" " for mirage version of theme
+"let ayucolor="dark"   " for dark version of theme
+"colorscheme ayu
 
+" Molokayo
+"colorcheme molokayo
+
+colo seoul256-light
+set background=light
+"let g:seoul256_background = 252
 
 set hlsearch
 set incsearch
+
 
 " Mappings
 
