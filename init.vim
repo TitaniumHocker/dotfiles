@@ -24,15 +24,15 @@ Plug 'wikitopian/hardmode'               " Hardmode, fuck arrows
 Plug 'neoclide/coc.nvim',                " Autocompletion from VSCode
             \ {'branch': 'release'}
 Plug 'jiangmiao/auto-pairs'              " Autopairs for ({'
-Plug 'coddingtonbear/neomake-platformio' " Platformio integration
+" Plug 'coddingtonbear/neomake-platformio' " Platformio integration
 Plug 'python-mode/python-mode',          " Additional Python support
             \ { 'for': 'python', 'branch': 'develop' }
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'junegunn/fzf',                     " FZF wrapper with cool commands
             \ { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'aurieh/discord.nvim',              " Status for discord
-            \ { 'do': ':UpdateRemotePlugins'}
+" Plug 'aurieh/discord.nvim',              " Status for discord
+"             \ { 'do': ':UpdateRemotePlugins'}
 
 " Visual
 Plug 'vim-airline/vim-airline'           " Airline
@@ -91,8 +91,9 @@ autocmd FileType text,md,rst set spell
 
 " Theme configuration
 set termguicolors
-colorscheme rusticated
-let g:airline_theme='rusticated'
+colorscheme gruvbox
+" colorscheme rusticated
+" let g:airline_theme='rusticated'
 let g:airline_powerline_fonts = 1
 
 " Some search tuning
