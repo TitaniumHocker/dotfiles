@@ -1,2 +1,13 @@
-# dots
-dotfiles rep
+# dotfiles
+
+My dotfiles
+
+### Installation
+
+Just use `make`
+
+### Deletion
+
+`make clean`
+
+

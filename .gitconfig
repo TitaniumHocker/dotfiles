@@ -1,0 +1,13 @@
+[init]
+	defaultBranch = master
+
+[user]
+	name = Ivan Fedorov
+
+[includeIf "gitdir:~/repos/"]
+	path = ~/.gitconfig.personal
+
+[includeIf "gitdir:~/work/"]
+	path = ~/.gitconfig.work
+[core]
+	editor = nvim

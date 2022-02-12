@@ -1,0 +1,49 @@
+#!/usr/bin/env sh
+# hwga - oh shit, here we go again
+# Tools installation script for new system
+
+set -e
+
+PKGS="tmux neovim git wget curl fish"
+
+echo "Oh shit, here we go again..."
+
+# Finding package manager
+if [ ! -z "$(command -v apt-get)" ]; then
+    echo "Using apt-get as package manager"
+    INSTALL="apt-get install --yes"
+elif [ ! -z "$(command -v yum)" ]; then
+    echo "Using yum as package manager"
+    INSTALL="yum install --yes"
+elif [ ! -z "$(command -v dnf)" ]; then
+    echo "Using dnf as package manager"
+    INSTALL="dnf install --yes"
+elif [ ! -z "$(command -v pacman)" ]; then
+    echo "Using pacman as package manager"
+    INSTALL="pacman -Sy --noconfirm"
+elif [ ! -z "$(command -v xbps-install)" ]; then
+    echo "Using xbps-install as package manager"
+    INSTALL="xbps-install --yes"
+else
+    echo "Package manager not found, can't continue"
+    exit 1
+fi
+
+sudo $INSTALL $PKGS
+
+if [ ! -d "$HOME/.tmux" ]; then
+    echo "Oh-my-tmux isn't installed, installing..."
+    git clone "https://github.com/gpakosz/.tmux.git" "$HOME/.tmux"
+    ln -s -f "$HOME/.tmux/.tmux.conf" "$HOME/.tmux.conf"
+    cp "$HOME/.tmux/.tmux.conf.local" "$HOME/.tmux.conf.local"
+    echo "set -g history-limit 10000" >> "$HOME/.tmux.conf.local"
+    echo "set -g mouse on" >> "$HOME/.tmux.conf.local"
+fi
+
+if [ ! -d "$HOME/.local/share/omf" ]; then
+    echo "Oh-my-fish isn't installed, installing..."
+    curl https://raw.githubusercontent.com/oh-my-fish/oh-my-fish/master/bin/install | fish
+    omf install bira
+fi
+
+echo "Required packages successfully installed to system"
