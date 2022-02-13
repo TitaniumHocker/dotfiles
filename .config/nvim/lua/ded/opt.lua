@@ -26,6 +26,7 @@ vim.opt.shortmess:append "c"       -- Don't pass messages to completion menu
 vim.cmd "set formatoptions-=o"     -- Don't insert comment leader after 'o' or 'O' in normal mode
 vim.cmd "set ww+=<,>,[,],h,l"      -- Update wrapping options(whichwrap)
 vim.cmd "set iskeyword+=-"         -- Don't separate words by '-' sign
+vim.cmd "set spl=en_us,ru_ru"      -- Add russian to spell check
 vim.opt.completeopt = {            -- For nvim-cmp:
     "menuone",                     --  - show menu even if there is only one match
     "noselect",                    --  - don't autoselect match
