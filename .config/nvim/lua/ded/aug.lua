@@ -8,6 +8,18 @@ augroup tt_ft
     autocmd BufNewFile,BufRead *.tt setf tt2html
 augroup END
 
+" Set filetype for jinja2 html templates
+augroup j2_ft
+    au!
+    autocmd BufNewFile,BufRead *.jinja2.html,*.j2.html,*.jinja.html set ft=jinja.html
+augroup END
+
+" Set filetype for C header files
+augroup ch_ft
+    au!
+    autocmd BufNewFile,BufRead *.h set ft=c
+augroup END
+
 " Enable spell check in text files
 autocmd FileType text,md,rst set spell
 

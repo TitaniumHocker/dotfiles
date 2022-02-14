@@ -20,6 +20,7 @@ vim.opt.signcolumn = "yes"            -- Always show sign column
 vim.opt.cursorline = true             -- Show cursor line
 vim.opt.exrc = true                   -- Source .nvimrc, .vimrc and .exrc in CWD
 vim.opt.secure = true                 -- Disable 'exrc' if files not owned by you
+vim.opt.termguicolors = true          -- Force to ensure normal colors support
 vim.opt.updatetime = 300              -- Short updatetime increases user experience, default is 4k
 vim.opt.undofile = true               -- Keep history for undo operation
 vim.opt.shortmess:append "c"          -- Don't pass messages to completion menu
@@ -28,6 +29,7 @@ vim.cmd "set ww+=<,>,[,],h,l"         -- Update wrapping options(whichwrap)
 vim.cmd "set iskeyword+=-"            -- Don't separate words by '-' sign
 vim.cmd "set spl=en_us,ru_ru"         -- Add russian to spell check
 vim.opt.completeopt = {               -- For nvim-cmp:
+    "menu",                           --  - use a PopUpMenu for completions
     "menuone",                        --  - show menu even if there is only one match
     "noselect",                       --  - don't autoselect match
     "noinsert"                        --  - don't autoinsert value from match
