@@ -1,27 +1,31 @@
 local loaded, bufferline = pcall(require, "bufferline")
 if not loaded then return end
+local key = require("ded.key")
 
-bufferline.setup()
-
-local opts = {
-    noremap = true,
-    silent = true,
+bufferline.setup {
+    options = {
+        diagnostics = "nvim_lsp",
+        separator_style = "thin",
+    }
 }
 
-local kmap = vim.api.nvim_set_keymap
-local nmap = function(from, to)
-    return kmap("n", from, to, opts)
-end
-local imap = function(from, to)
-    return kmap("i", from, to, opts)
-end
-local vmap = function(from, to)
-    return kmap("v", from, to, opts)
+-- Go to pevious/next
+key.nmap("<A-.>", ":BufferLineCycleNext<CR>")
+key.nmap("<A-,>", ":BufferLineCyclePrev<CR>")
+-- Move current buff previous/next
+key.nmap("<A->>", ":BufferLineMoveNext<CR>")
+key.nmap("<A-<>", ":BufferLineMovePrev<CR>")
+
+-- Select preferred buffer from 1 to 9
+for i = 1, 9 do
+    key.nmap("<A-" .. i .. ">", ":BufferLineGoToBuffer " .. i .. "<CR>")
 end
 
--- Go to pevious/next
-nmap("<A-.>", ":BufferLineCycleNext<CR>")
-nmap("<A-,>", ":BufferLineCyclePrev<CR>")
--- Move current buff previous/next
-nmap("<A->>", ":BufferLineMoveNext<CR>")
-nmap("<A-<>", ":BufferLineMovePrev<CR>")
+-- Pick buffer
+key.nmap("<A-p>", ":BufferLinePick<CR>")
+
+-- Pick buffer to close
+key.nmap("<A-P>", ":BufferLinePickClose<CR>")
+
+-- Close current buffer
+key.nmap("<A-c>", ":bd<BAR>bp<CR>")

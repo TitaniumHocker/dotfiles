@@ -43,10 +43,17 @@ return packer.startup(function(use)
     use "sainnhe/gruvbox-material"      -- Old good gruvbox
     use "folke/tokyonight.nvim"         -- Pretty nice blue theme
 
-    -- Usefull tweaks
+    -- Tweaks
     use "windwp/nvim-autopairs"         -- Autopairs, integrates with cmp and treesitter
+    use "folke/which-key.nvim"          -- Helps with commands
+
+    -- Usefull things
     use "kyazdani42/nvim-tree.lua"      -- NerdTree implementation in lua
     use "tpope/vim-dispatch"            -- Build this shit up
+    use "nvim-telescope/telescope.nvim" -- Awesome fuzzy finder
+    use "akinsho/toggleterm.nvim"       -- Nice tetminal
+    use "lewis6991/gitsigns.nvim"       -- Git integration
+    use "numToStr/Comment.nvim"         -- Comment things as Jedi
 
     -- Visual additions
     use "hoob3rt/lualine.nvim"          -- Airline implementation in lua
@@ -84,11 +91,11 @@ return packer.startup(function(use)
 
     -- LSP
     use "neovim/nvim-lspconfig"         -- LSP configurations
-    use "williamboman/nvim-lsp-installer" -- Simple to use LS installer
     use "jose-elias-alvarez/null-ls.nvim" -- Adapter for formatters and linters
     use "hrsh7th/cmp-nvim-lsp"          -- Completions based on LSP
     use "folke/lsp-colors.nvim"         -- Additional colors
     use "folke/trouble.nvim"            -- Prettify LSP results
+
 
 
     if autoinstalled then

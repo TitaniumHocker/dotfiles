@@ -1,4 +1,5 @@
 -- Base (Neo)Vim options
+vim.opt.mouse = "a"                   -- Enable mouse
 vim.opt.relativenumber = true         -- Show relative line numbers
 vim.opt.clipboard = "unnamedplus"     -- Universal clipboard
 vim.opt.cmdheight = 2                 -- 2 lines for commands line

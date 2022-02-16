@@ -1,3 +1,4 @@
+background_opacity: 0.9 # Deprecated after v0.9, use window.opacity instead
 window:
   padding:
     x: 10

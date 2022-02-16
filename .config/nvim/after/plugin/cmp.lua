@@ -1,26 +1,9 @@
 local loaded, cmp = pcall(require, "cmp")
 if not cmp then return end
-
 local loaded, snip = pcall(require, "luasnip")
 if not snip then return end
 
 require("luasnip/loaders/from_vscode").lazy_load()
-
-local opts = {
-    noremap = true,
-    silent = true,
-}
-
-local kmap = vim.api.nvim_set_keymap
-local nmap = function(from, to)
-    return kmap("n", from, to, opts)
-end
-local imap = function(from, to)
-    return kmap("i", from, to, opts)
-end
-local vmap = function(from, to)
-    return kmap("v", from, to, opts)
-end
 
 local check_backspace = function()
     local col = vim.fn.col "." - 1
@@ -115,13 +98,13 @@ cmp.setup {
             vim_item.kind = string.format("%s", kind_icons[vim_item.kind])
             -- vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
             vim_item.menu = ({
-                nvim_lsp = "[Lang]",
+                nvim_lsp = "[LSP]",
                 luasnip = "[Snip]",
                 buffer = "[Buff]",
                 path = "[Path]",
                 nvim_lua = "[Nvim]",
                 vim_dadbod_completion = "[DaDB]",
-                spell = "[Spel]",
+                spell = "[Spell]",
             })[entry.source.name]
             return vim_item
         end,

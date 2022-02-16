@@ -1,9 +1,11 @@
 -- Basic keymaps
+
 local opts = {
     noremap = true,
     silent = true,
 }
 
+-- Global keymaps shortcuts
 local kmap = vim.api.nvim_set_keymap
 local nmap = function(from, to)
     return kmap("n", from, to, opts)
@@ -13,6 +15,18 @@ local imap = function(from, to)
 end
 local vmap = function(from, to)
     return kmap("v", from, to, opts)
+end
+
+-- Buffer keymaps shortcuts
+local bmap = vim.api.nvim_buf_set_keymap
+local bnmap = function(buf, from, to)
+    return bmap(buf, "n", from, to, opts)
+end
+local bimap = function(buf, from, to)
+    return bmap(buf, "i", from, to, opts)
+end
+local bvmap = function(buf, from, to)
+    return bmap(buf, "v", from, to, opts)
 end
 
 -- Set space as leader key
@@ -38,3 +52,16 @@ vmap(">", ">gv")
 
 -- Don't rewrite previously yanked after paste in visual mode
 vmap("p", '"_dP')
+
+
+-- Export shortcuts
+return {
+    kmap = kmap,
+    nmap = nmap,
+    imap = imap,
+    vmap = vmap,
+    bmap = bmap,
+    bnmap = bnmap,
+    bimap = bimap,
+    bvmap = bvmap,
+}

@@ -1,24 +1,14 @@
 local loaded, tree = pcall(require, "nvim-tree")
 if not loaded then return end
 
-tree.setup()
+local key = require("ded.key")
 
-local opts = {
-    noremap = true,
-    silent = true,
+tree.setup {
+    diagnostics = {
+        enable = true
+    }
 }
 
-local kmap = vim.api.nvim_set_keymap
-local nmap = function(from, to)
-    return kmap("n", from, to, opts)
-end
-local imap = function(from, to)
-    return kmap("i", from, to, opts)
-end
-local vmap = function(from, to)
-    return kmap("v", from, to, opts)
-end
-
-nmap("<C-n>", ":NvimTreeToggle<CR>")
-nmap("<leader>r", ":NvimTreeRefresh<CR>")
-nmap("<leader>n", ":NvimTreeFindFile<CR>")
+key.nmap("<C-n>", ":NvimTreeToggle<CR>")
+key.nmap("<leader>r", ":NvimTreeRefresh<CR>")
+key.nmap("<leader>n", ":NvimTreeFindFile<CR>")
