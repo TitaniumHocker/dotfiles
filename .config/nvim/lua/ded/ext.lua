@@ -95,6 +95,7 @@ return packer.startup(function(use)
     use "hrsh7th/cmp-nvim-lsp"          -- Completions based on LSP
     use "folke/lsp-colors.nvim"         -- Additional colors
     use "folke/trouble.nvim"            -- Prettify LSP results
+    use "ray-x/lsp_signature.nvim"      -- Show signatures
 
     -- Start screen
     use "glepnir/dashboard-nvim"        -- Awesome dashboard
