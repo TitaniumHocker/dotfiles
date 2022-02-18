@@ -1,1 +1,4 @@
-require("ded.lsp").setup("html", {})
+local lsp = require("ded.lsp")
+
+lsp.setup("html")
+lsp.setup("tailwindcss")
