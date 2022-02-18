@@ -96,7 +96,9 @@ return packer.startup(function(use)
     use "folke/lsp-colors.nvim"         -- Additional colors
     use "folke/trouble.nvim"            -- Prettify LSP results
 
-
+    -- Start screen
+    use "glepnir/dashboard-nvim"        -- Awesome dashboard
+    use "ahmedkhalf/project.nvim"       -- Project management
 
     if autoinstalled then
         require("packer").sync()

@@ -35,6 +35,8 @@ vim.opt.completeopt = {               -- For nvim-cmp:
     "noselect",                       --  - don't autoselect match
     "noinsert"                        --  - don't autoinsert value from match
 }
+
+-- Additional shit
 vim.g["python_highlight_all"] = true  -- Additional syntax highligting for python
 vim.g["neovide_transparency"] = 0.90  -- Transparency for NeoVide GUI
 vim.opt.guifont = "Fira Code Semibold:h12"  -- Set font for GUI mode
