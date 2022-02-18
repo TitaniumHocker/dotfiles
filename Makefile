@@ -1,8 +1,12 @@
+STOW=stow
+STOWOPT=--ignore Makefile
+
+
 all:
-	stow .
+	$(STOW) $(STOWOPT) .
 
 clean:
-	stow --delete .
+	$(STOW) $(STOWOPT) --delete .
 
 check:
-	stow --no .
+	$(STOW) $(STOWOPT) --no .
