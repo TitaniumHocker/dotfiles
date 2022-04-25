@@ -9,9 +9,8 @@ window:
 font:
   size: 14
   normal:
-#    family: "Fira Code"
     family: Iosevka Extended
-    style: Semibold
+    style: Regular
 cursor:
   style:
     shape: Underline
