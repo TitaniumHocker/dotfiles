@@ -23,7 +23,7 @@ local on_attach = function(client, bufnr)
     key.bnmap(bufnr, "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>")
     key.bnmap(bufnr, "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>")
     key.bnmap(bufnr, "gr", "<cmd>lua vim.lsp.buf.references()<CR>")
-    key.bnmap(bufnr, "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>")
+    key.bnmap(bufnr, "<leader>b", "<cmd>lua vim.lsp.buf.formatting()<CR>")
 end
 
 local setup = function(name, settings)
