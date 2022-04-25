@@ -2,6 +2,9 @@ vim.cmd [[
 " Autoconfigure buffer with terminal
 autocmd TermOpen * setlocal nonumber norelativenumber
 
+" Set filetype for Jenkinsfile
+autocmd BufNew,BufNewFile,BufRead *Jenkinsfile* setlocal ft=groovy
+
 " Set filetype for template toolkit files
 augroup tt_ft
     au!
