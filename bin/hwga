@@ -4,7 +4,7 @@
 
 set -e
 
-PKGS="tmux neovim git wget curl fish fd ripgrep clang gcc make ctags"
+PKGS="tmux neovim git wget curl fish fd ripgrep clang gcc make ctags bat exa zoxide"
 
 echo "Oh shit, here we go again..."
 
