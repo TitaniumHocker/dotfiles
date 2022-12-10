@@ -1,20 +1,20 @@
-background_opacity: 0.9 # Deprecated after v0.9, use window.opacity instead
+background_opacity: 0.88 # Deprecated after v0.9, use window.opacity instead
 window:
   padding:
-    x: 10
-    y: 10
+    x: 8
+    y: 4
   startup_mode: Maximized
-  opacity: 0.9
+  opacity: 0.88
   decorations: none
 font:
-  size: 13
+  size: 14
   normal:
     family: Iosevka Term Extended
     style: Regular
 cursor:
   style:
-    shape: Underline
-  blinking: On
+    shape: Beam
+    blinking: Always
 
 # Colors (Gruvbox dark)
 colors:

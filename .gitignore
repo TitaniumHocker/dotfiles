@@ -1,2 +1,3 @@
 .config/nvim/plugin/packer_compiled.lua
 .config/fish/conf.d/locals.fish
+.config/fish/.autoinstall

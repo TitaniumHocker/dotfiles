@@ -43,6 +43,9 @@ local kind_icons = {
 snip.filetype_extend("ruby", {"rails"})
 
 cmp.setup {
+    window = {
+        documentation = cmp.config.window.bordered()
+    },
     snippet = {
         expand = function(args)
             snip.lsp_expand(args.body) -- For `luasnip` users.
@@ -118,9 +121,6 @@ cmp.setup {
     confirm_opts = {
         behavior = cmp.ConfirmBehavior.Replace,
         select = false,
-    },
-    documentation = {
-        border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
     },
     experimental = {
         ghost_text = true,

@@ -1,8 +1,9 @@
 -- Base (Neo)Vim options
 vim.opt.mouse = "a"                   -- Enable mouse
 vim.opt.relativenumber = true         -- Show relative line numbers
+vim.opt.number = true                 -- Set line number at cursor
 vim.opt.clipboard = "unnamedplus"     -- Universal clipboard
-vim.opt.cmdheight = 2                 -- 2 lines for commands line
+vim.opt.cmdheight = 1                 -- 1 lines for commands line
 vim.opt.hlsearch = true               -- Highlight search matches
 vim.opt.ignorecase = true             -- Case insensetive search
 vim.opt.smartcase = true              -- Turn off 'ignorecase' if pattern contains upper signs
@@ -38,5 +39,5 @@ vim.opt.completeopt = {               -- For nvim-cmp:
 
 -- Additional shit
 vim.g["python_highlight_all"] = true  -- Additional syntax highligting for python
-vim.g["neovide_transparency"] = 0.90  -- Transparency for NeoVide GUI
-vim.opt.guifont = "Fira Code Semibold:h12"  -- Set font for GUI mode
+vim.g["neovide_transparency"] = 0.80  -- Transparency for NeoVide GUI
+vim.opt.guifont = "Iosevka Term Extended:h11"  -- Set font for GUI mode

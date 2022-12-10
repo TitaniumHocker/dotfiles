@@ -1,4 +1,8 @@
 if status is-interactive
+    if ! type gpg >/dev/null 2>&1
+        echo "dotfiles: gpg is not installed" >&2
+        return
+    end
     set use_gpg_for_ssh true
 
     if $use_gpg_for_ssh

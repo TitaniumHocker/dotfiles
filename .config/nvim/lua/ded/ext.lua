@@ -53,6 +53,7 @@ return packer.startup(function(use)
     use "nvim-telescope/telescope.nvim" -- Awesome fuzzy finder
     use "akinsho/toggleterm.nvim"       -- Nice tetminal
     use "lewis6991/gitsigns.nvim"       -- Git integration
+    use "kdheepak/lazygit.nvim"         -- lazygit integration
     use "numToStr/Comment.nvim"         -- Comment things as Jedi
 
     -- Visual additions
@@ -96,6 +97,13 @@ return packer.startup(function(use)
     use "folke/lsp-colors.nvim"         -- Additional colors
     use "folke/trouble.nvim"            -- Prettify LSP results
     use "ray-x/lsp_signature.nvim"      -- Show signatures
+
+    -- DAP
+    use "mfussenegger/nvim-dap"         -- DAP suopport
+    use "rcarriga/nvim-dap-ui"          -- UI
+    use "theHamsta/nvim-dap-virtual-text" -- virtual text
+    use "mfussenegger/nvim-dap-python"  -- DAP + python
+
 
     -- Start screen
     use "glepnir/dashboard-nvim"        -- Awesome dashboard
