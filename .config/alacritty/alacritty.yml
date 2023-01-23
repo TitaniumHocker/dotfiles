@@ -1,16 +1,20 @@
-background_opacity: 0.88 # Deprecated after v0.9, use window.opacity instead
+background_opacity: 0.90 # Deprecated after v0.9, use window.opacity instead
 window:
   padding:
-    x: 8
-    y: 4
-  startup_mode: Maximized
-  opacity: 0.88
-  decorations: none
+    x: 2
+    y: 2
+      #startup_mode: Maximized
+  opacity: 0.90
+    #  decorations: none
 font:
   size: 14
   normal:
-    family: Iosevka Term Extended
+    # family: JetBrains Mono
+    # style: Regular
+    family: Ubuntu Mono Ligaturized
     style: Regular
+    # family: Iosevka Term Extended
+    # style: Regular
 cursor:
   style:
     shape: Beam
@@ -20,9 +24,9 @@ cursor:
 colors:
   # Default colors
   primary:
-    # hard contrast: background = '0x1d2021'
-    background: '0x282828'
-    # soft contrast: background = '0x32302f'
+    # background: '0x1d2021'  # hard
+    background: '0x282828'  # medium
+    # background: '0x32302f'  # soft
     foreground: '0xebdbb2'
 
   # Normal colors
@@ -36,16 +40,16 @@ colors:
     cyan:    '0x689d6a'
     white:   '0xa89984'
 
-  # Bright colors
-  bright:
-    black:   '0x928374'
-    red:     '0xfb4934'
-    green:   '0xb8bb26'
-    yellow:  '0xfabd2f'
-    blue:    '0x83a598'
-    magenta: '0xd3869b'
-    cyan:    '0x8ec07c'
-    white:   '0xebdbb2'
+  # # Bright colors
+  # bright:
+  #   black:   '0x928374'
+  #   red:     '0xfb4934'
+  #   green:   '0xb8bb26'
+  #   yellow:  '0xfabd2f'
+  #   blue:    '0x83a598'
+  #   magenta: '0xd3869b'
+  #   cyan:    '0x8ec07c'
+  #   white:   '0xebdbb2'
 
 # # Colors (Tokyo Night)
 # # Source: https://github.com/zatchheems/tokyo-night-alacritty-theme
