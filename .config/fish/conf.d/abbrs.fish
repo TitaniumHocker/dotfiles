@@ -34,5 +34,8 @@ if status is-interactive
 
     if type git >/dev/null 2>&1
         abbr g git
+        abbr gs git status
+        abbr gb git branch
+        abbr gw git worktree
     end
 end
