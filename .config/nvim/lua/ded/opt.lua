@@ -10,6 +10,8 @@ vim.opt.smartcase = true              -- Turn off 'ignorecase' if pattern contai
 vim.opt.expandtab = true              -- Expand <Tab> to spaces
 vim.opt.shiftwidth = 4                -- 1 tab = 4 spaces for autoindent
 vim.opt.tabstop = 4                   -- 1 tab = 4 spaces for <Tab>
+vim.opt.softtabstop = 4
+vim.opt.autoindent = true
 vim.opt.smartindent = true            -- Make autoindent smarter
 vim.opt.showtabline = 2               -- Always show tabs
 vim.opt.hidden = true                 -- Keep unsaved buffers in the background
@@ -38,6 +40,12 @@ vim.opt.completeopt = {               -- For nvim-cmp:
 }
 
 -- Additional shit
-vim.g["python_highlight_all"] = true  -- Additional syntax highligting for python
+-- vim.g["python_highlight_all"] = true  -- Additional syntax highligting for python
 vim.g["neovide_transparency"] = 0.80  -- Transparency for NeoVide GUI
 vim.opt.guifont = "Iosevka Term Extended:h11"  -- Set font for GUI mode
+vim.g["python_indent"] = {
+    open_paren = 'shiftwidth()',
+    -- nested_paren = 'shiftwidth()',
+    -- continue = 'shiftwidth() * 2',
+    closed_paren_align_last_line = false,
+}

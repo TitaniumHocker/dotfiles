@@ -61,19 +61,14 @@ return packer.startup(function(use)
     use "akinsho/bufferline.nvim"       -- Buffers and tabs status line
 
     -- Syntax
+    use {
+        'nvim-treesitter/nvim-treesitter',
+        run = ':TSUpdate'
+    }
+    use "nvim-treesitter/nvim-treesitter-textobjects"
     use "Glench/Vim-Jinja2-Syntax"      -- Jinja2 syntax support
     use "saltstack/salt-vim"            -- Support for saltstack(sls) filetype
     use "chr4/nginx.vim"                -- Support for nginx config filetype
-    use {                               -- Fast as FUCK syntax parsers
-        "nvim-treesitter/nvim-treesitter",
-        run = ":TSUpdate",
-    }
-
-    -- Funny shit
-    use {
-        "aurieh/discord.nvim",          -- Show status in Discord
-        run = ":UpdateRemotePlugins",
-    }
 
     -- Completion
     use "hrsh7th/nvim-cmp"              -- Completion engine
@@ -98,11 +93,11 @@ return packer.startup(function(use)
     use "folke/trouble.nvim"            -- Prettify LSP results
     use "ray-x/lsp_signature.nvim"      -- Show signatures
 
-    -- DAP
-    use "mfussenegger/nvim-dap"         -- DAP suopport
-    use "rcarriga/nvim-dap-ui"          -- UI
-    use "theHamsta/nvim-dap-virtual-text" -- virtual text
-    use "mfussenegger/nvim-dap-python"  -- DAP + python
+    -- -- DAP
+    -- use "mfussenegger/nvim-dap"         -- DAP suopport
+    -- use "rcarriga/nvim-dap-ui"          -- UI
+    -- use "theHamsta/nvim-dap-virtual-text" -- virtual text
+    -- use "mfussenegger/nvim-dap-python"  -- DAP + python
 
 
     -- Start screen

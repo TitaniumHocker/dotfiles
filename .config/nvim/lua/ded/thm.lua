@@ -13,7 +13,7 @@ local themes = {
     end,
     tokyonight = function()
         vim.o.background = "dark"
-        vim.g.tokyonight_style = "storm"
+        vim.g.tokyonight_style = "moon"
         vim.g.tokyonight_transparent = 1
         vim.cmd "colorscheme tokyonight"
     end,

@@ -12,4 +12,10 @@ treesitter.setup {
         enable = true,
         disable = { "python", "yaml" },
     },
+    textobjects = {
+        select = {
+            enable = true,
+            lookahead = true,
+        }
+    }
 }

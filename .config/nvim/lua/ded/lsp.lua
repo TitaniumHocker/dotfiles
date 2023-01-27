@@ -30,7 +30,8 @@ local setup = function(name, settings)
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     local loaded, lspcmp = pcall(require, "cmp_nvim_lsp")
     if loaded then
-        capabilities = lspcmp.update_capabilities(capabilities)
+        capabilities = lspcmp.default_capabilities(capabilities)
+        -- capabilities = lspcmp.update_capabilities(capabilities) -- deprecated
     end
     lsp[name].setup {
         on_attach = on_attach,
