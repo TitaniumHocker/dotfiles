@@ -3,8 +3,37 @@ local loaded, dashboard = pcall(require, "dashboard")
 if not loaded then return end
 
 local home = os.getenv("HOME")
+local util = require 'packer.util'
 
--- dashboard.custom_header = {
+local count_plugins = function()
+    if not util then return 0 end
+    local extpath = vim.fn.stdpath "data" .. "/site/pack/packer/start"
+    local start_plugins = {}
+    local start_dir_handle = vim.loop.fs_opendir(extpath, nil, 50)
+    if start_dir_handle then
+        local start_dir_items = vim.loop.fs_readdir(start_dir_handle)
+        while start_dir_items do
+            for _, item in ipairs(start_dir_items) do
+                start_plugins[util.join_paths(extpath, item.name)] = true
+            end
+
+            start_dir_items = vim.loop.fs_readdir(start_dir_handle)
+        end
+    end
+    return #vim.tbl_keys(start_plugins)
+end
+
+local function pad(config)
+    local height = vim.api.nvim_win_get_height(0)
+    local center = math.ceil( height / 2)
+    local dbc = math.ceil((#config.center + #config.center - 1 + #config.header + #config.footer) / 2)
+    for i =1 , center -dbc do
+        table.insert(config.header, 1, '')
+    end
+    return config
+end
+
+-- local asciiart = {
 --     "",
 --     "    _   __         _    ___              ____  ____  ______",
 --     "   / | / /__  ____| |  / (_)___ ___     / __ \\\\/ __ \\\\/ ____/",
@@ -16,7 +45,7 @@ local home = os.getenv("HOME")
 --     "",
 -- }
 
-dashboard.custom_header = {
+local asciiart = {
     "",
     "    ______                                  __  __                       ",
     "   / ____/___  ________ _   _____  _____    \\ \\/ /___  __  ______  ____ _",
@@ -34,71 +63,68 @@ dashboard.custom_header = {
     "",
 }
 
-dashboard.custom_center = {
-    {
-        icon = "  ",
-        desc = "Find file",
-        action = "Telescope find_files"
-    },
-    {
-        icon = "  ",
-        desc = "New file",
-        action = ":ene!"
-    },
-    {
-        icon = "  ",
-        desc = "Recent projects",
-        action = "Telescope projects"
-    },
-    {
-        icon = "  ",
-        desc = "Recently used files",
-        action = "Telescope oldfiles"
-    },
-    {
-        icon = "  ",
-        desc = "Find word",
-        action = "Telescope live_grep"
-    },
-    {
-        icon = "  ",
-        desc = "Configuration",
-        action = ":e ~/.config/nvim"
-    }
-}
 
 
--- vim.g["dashboard_default_executive"] = "telescope"
--- vim.g["dashboard_custom_section"] = {
---     a = {
---         description = { "  Find File          " },
---         command = "Telescope find_files",
---     },
---     b = {
---         description = { "  New File           " },
---         command = ":ene!",
---     },
---     c = {
---         description = { "  Recent Projects    " },
---         command = "Telescope projects",
---     },
---     d = {
---         description = { "  Recently Used Files" },
---         command = "Telescope oldfiles",
---     },
---     e = {
---         description = { "  Find Word          " },
---         command = "Telescope live_grep",
---     },
---     f = {
---         description = { "  Configuration      " },
---         command = ":e ~/.config/nvim/init.lua",
---     },
--- }
---[[ Breaks with fish
-vim.g["dashboard_preview_command"] = "cat"
-vim.g["dashboard_preview_pipeline"] = "lolcat"
-vim.g["dashboard_preview_file"] = "~/.config/nvim/banner.txt"
-vim.g["dashboard_preview_file_height"] = 6
-vim.g["dashboard_preview_file_width"] = 20
-]]
+dashboard.setup ({
+    theme = "doom",
+    config = pad({
+        header = asciiart,
+        center = {
+            {
+                icon = "  ",
+                desc = "Find file",
+                action = "Telescope find_files",
+                key = 'b',
+                icon_hl = 'Title',
+                desc_hl = 'String',
+                key_hl = 'Number',
+            },
+            {
+                icon = "  ",
+                desc = "New file",
+                action = ":ene!",
+                key = 'f',
+                icon_hl = 'Title',
+                desc_hl = 'String',
+                key_hl = 'Number',
+            },
+            {
+                icon = "  ",
+                desc = "Recent projects",
+                action = "Telescope projects",
+                key = 'p',
+                icon_hl = 'Title',
+                desc_hl = 'String',
+                key_hl = 'Number',
+            },
+            {
+                icon = "  ",
+                desc = "Recently used files",
+                action = "Telescope oldfiles",
+                key = 'u',
+                icon_hl = 'Title',
+                desc_hl = 'String',
+                key_hl = 'Number',
+            },
+            {
+                icon = "  ",
+                desc = "Find word",
+                action = "Telescope live_grep",
+                key = 'g',
+                icon_hl = 'Title',
+                desc_hl = 'String',
+                key_hl = 'Number',
+            },
+            {
+                icon = "  ",
+                desc = "Configuration",
+                action = ":e ~/.config/nvim",
+                key = 'c',
+                icon_hl = 'Title',
+                desc_hl = 'String',
+                key_hl = 'Number',
+            },
+        },
+        footer = { '', '', '  neovim loaded ' .. count_plugins() .. ' packages' }
+    })
+})

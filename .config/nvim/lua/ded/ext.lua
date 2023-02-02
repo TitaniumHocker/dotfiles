@@ -41,7 +41,6 @@ return packer.startup(function(use)
 
     -- Themes
     use "sainnhe/gruvbox-material"      -- Old good gruvbox
-    use "folke/tokyonight.nvim"         -- Pretty nice blue theme
 
     -- Tweaks
     use "windwp/nvim-autopairs"         -- Autopairs, integrates with cmp and treesitter
@@ -101,7 +100,10 @@ return packer.startup(function(use)
 
 
     -- Start screen
-    use "glepnir/dashboard-nvim"        -- Awesome dashboard
+    use {
+        "glepnir/dashboard-nvim",  -- Awesome dashboard
+        requires = {'nvim-tree/nvim-web-devicons'}
+    }
     use "ahmedkhalf/project.nvim"       -- Project management
 
     if autoinstalled then
