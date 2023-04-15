@@ -16,6 +16,9 @@ end
 local vmap = function(from, to)
     return kmap("v", from, to, opts)
 end
+local tmap = function(from, to)
+    return kmap("t", from, to, opts)
+end
 
 -- Buffer keymaps shortcuts
 local bmap = vim.api.nvim_buf_set_keymap
@@ -60,6 +63,7 @@ return {
     nmap = nmap,
     imap = imap,
     vmap = vmap,
+    tmap = tmap,
     bmap = bmap,
     bnmap = bnmap,
     bimap = bimap,

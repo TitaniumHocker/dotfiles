@@ -52,7 +52,6 @@ return packer.startup(function(use)
     use "nvim-telescope/telescope.nvim" -- Awesome fuzzy finder
     use "akinsho/toggleterm.nvim"       -- Nice tetminal
     use "lewis6991/gitsigns.nvim"       -- Git integration
-    use "kdheepak/lazygit.nvim"         -- lazygit integration
     use "numToStr/Comment.nvim"         -- Comment things as Jedi
 
     -- Visual additions
