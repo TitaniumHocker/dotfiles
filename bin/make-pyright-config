@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+if [ -z "$1" ]; then
+    echo "Path to venv wasn't provided." 1>&2
+    exit 1
+fi
+
+if [ ! -d "$1" ]; then
+    echo "$1 is not a directory." 1>&2
+    exit 1
+fi
+
+cat << EOF
+{
+    "venvPath": "$(dirname $1)",
+    "venv": "$(basename $1)"
+}
+EOF
