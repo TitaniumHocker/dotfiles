@@ -6,3 +6,4 @@ require "ded.dsh"  -- Dashboard
 
 local colorscheme = require("ded.thm").colorscheme
 colorscheme "gruvbox"
+-- colorscheme "monokai"

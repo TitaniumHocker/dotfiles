@@ -17,14 +17,16 @@ local themes = {
         vim.g.tokyonight_transparent = 1
         vim.cmd "colorscheme tokyonight"
     end,
+    monokai = function()
+        vim.cmd "colorscheme monokai_pro"
+    end,
 }
 
 local colorscheme = function(value)
-    local status, _ = pcall(themes[value])
+    local status, err = pcall(themes[value])
     if not status then
         vim.cmd "colorscheme default"
-        vim.o.background = "default"
-        vim.notify("Failed to set colorscheme" .. value)
+        vim.notify("Failed to set colorscheme " .. value .. "\nError: " .. err)
     end
 end
 

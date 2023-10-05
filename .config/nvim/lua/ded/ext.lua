@@ -41,6 +41,7 @@ return packer.startup(function(use)
 
     -- Themes
     use "sainnhe/gruvbox-material"      -- Old good gruvbox
+    -- use "tanvirtin/monokai.nvim"        -- monokai(from sublimetext)
 
     -- Tweaks
     use "windwp/nvim-autopairs"         -- Autopairs, integrates with cmp and treesitter
@@ -48,11 +49,11 @@ return packer.startup(function(use)
 
     -- Usefull things
     use "kyazdani42/nvim-tree.lua"      -- NerdTree implementation in lua
-    use "tpope/vim-dispatch"            -- Build this shit up
     use "nvim-telescope/telescope.nvim" -- Awesome fuzzy finder
     use "akinsho/toggleterm.nvim"       -- Nice tetminal
     use "lewis6991/gitsigns.nvim"       -- Git integration
     use "numToStr/Comment.nvim"         -- Comment things as Jedi
+    use 'simrat39/symbols-outline.nvim' -- Tree for code symbols(like ctags)
 
     -- Visual additions
     use "hoob3rt/lualine.nvim"          -- Airline implementation in lua
@@ -68,35 +69,17 @@ return packer.startup(function(use)
     use "saltstack/salt-vim"            -- Support for saltstack(sls) filetype
     use "chr4/nginx.vim"                -- Support for nginx config filetype
 
-    -- Completion
+    -- LSP and stuff
+    use "neovim/nvim-lspconfig"         -- LSP configurations
     use "hrsh7th/nvim-cmp"              -- Completion engine
+    use "hrsh7th/cmp-nvim-lsp"          -- Completions based on LSP
     use "hrsh7th/cmp-buffer"            -- Completions based on buffer
     use "hrsh7th/cmp-path"              -- Completions based on path
     use "hrsh7th/cmp-cmdline"           -- Completions based on command line
     use "hrsh7th/cmp-nvim-lua"          -- Completions for lua based config
-    use "kristijanhusak/vim-dadbod-completion" -- Completios for DBMSs
-    use "tpope/vim-dadbod"              -- Required for pevious one
-    use "kdheepak/cmp-latex-symbols"    -- Completion for LaTeX format
-
-    -- Snippets
-    use "L3MON4D3/LuaSnip"              -- Snippets engine
-    use "rafamadriz/friendly-snippets"  -- Awesome snippets pack
-    use "saadparwaiz1/cmp_luasnip"      -- Completions based on snippets
-
-    -- LSP
-    use "neovim/nvim-lspconfig"         -- LSP configurations
     use "jose-elias-alvarez/null-ls.nvim" -- Adapter for formatters and linters
-    use "hrsh7th/cmp-nvim-lsp"          -- Completions based on LSP
-    use "folke/lsp-colors.nvim"         -- Additional colors
     use "folke/trouble.nvim"            -- Prettify LSP results
     use "ray-x/lsp_signature.nvim"      -- Show signatures
-
-    -- -- DAP
-    -- use "mfussenegger/nvim-dap"         -- DAP suopport
-    -- use "rcarriga/nvim-dap-ui"          -- UI
-    -- use "theHamsta/nvim-dap-virtual-text" -- virtual text
-    -- use "mfussenegger/nvim-dap-python"  -- DAP + python
-
 
     -- Start screen
     use {
