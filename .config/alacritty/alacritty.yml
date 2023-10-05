@@ -1,24 +1,23 @@
-background_opacity: 0.90 # Deprecated after v0.9, use window.opacity instead
+# background_opacity: 0.90 # Deprecated after v0.9, use window.opacity instead
 window:
   padding:
     x: 2
     y: 2
-      #startup_mode: Maximized
+  # startup_mode: Maximized
+  # startup_mode: Fullscreen
   opacity: 0.90
-    #  decorations: none
 font:
   size: 14
   normal:
-    # family: JetBrains Mono
+    # family: Ubuntu Mono Ligaturized
     # style: Regular
-    family: Ubuntu Mono Ligaturized
+    family: BlexMono Nerd Font
     style: Regular
-    # family: Iosevka Term Extended
-    # style: Regular
 cursor:
   style:
     shape: Beam
     blinking: Always
+  unfocused_hollow: true
 
 # Colors (Gruvbox dark)
 colors:
