@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+setxkbmap -option caps:escape
+if [ ! -z "$(xrandr | grep DP-1-3 | grep connected | grep "3440")" ]; then
+    xrandr --output eDP-1 --off
+    xrandr --output DP-1-3 --mode 3440x1440 --rate 120.00
+fi
+
+picom &
+skypeforlinux &
+telegram-desktop &
+discord &
+mattermost-desktop &
+vkteams &
