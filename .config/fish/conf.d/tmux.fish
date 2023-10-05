@@ -9,7 +9,7 @@ if status is-interactive && command -v tmux >/dev/null 2>&1 && [ -d "$HOME/.tmux
     end
     tmux new -As S >/dev/null 2>&1
     if [ "$TERM" = "tmux-256color" ]
-        set --global --export TERM "screen-256color"
+        set --global TERM "screen-256color"
     end
 end
 

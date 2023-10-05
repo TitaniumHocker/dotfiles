@@ -38,4 +38,8 @@ if status is-interactive
         abbr gb git branch
         abbr gw git worktree
     end
+
+    if type nvim >/dev/null 2>&1
+        abbr e nvim
+    end
 end

@@ -13,10 +13,10 @@ if status is-interactive
         set --erase SSH_AGENT_PID
 
         if [ "$gnupg_SSH_AUTH_SOCK_by" -ne "$fish_pid" ];
-            set --export --global SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+            set --export SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
         end
 
-        set --export --global GPG_TTY (tty)
+        set --export GPG_TTY (tty)
         gpg-connect-agent updatestartuptty /bye >/dev/null
 
         echo "Attached GnuPG as SSH auth method"
