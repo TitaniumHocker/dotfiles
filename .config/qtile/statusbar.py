@@ -2,60 +2,69 @@ from const import colors
 from libqtile import bar, layout, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
-from qtile_extras import widget as extwidget
-from utils import is_wayland, powerline
+from utils import is_wayland, powerline, parse_mic
+import subprocess
 
 contrast = "#1d2021"
 
-leftbar = bar.Bar(
+topbar = bar.Bar(
     [
-        widget.Systray(background=colors[6], padding=8)
-        if not is_wayland()
-        else widget.StatusNotifier(background=colors[6]),
-        widget.Sep(padding=8, background=colors[6], linewidth=0),
-        widget.Spacer(),
-        widget.Wttr(location={"MSK": "Moscow"}, fmt="  {}  "),
-        widget.CheckUpdates(
-            distro="Arch_checkupdates",
-            no_update_string="Up to date",
-            fmt="  {}  ",
-            background=colors[6],
-        ),
-    ],
-    28,
-    opacity=.90,
-)
-
-bottombar = bar.Bar(
-    [
-        widget.CurrentLayoutIcon(scale=0.75, background=colors[3]),
+        widget.CurrentLayout(mode='icon', scale=0.75, background=colors[3]),
         widget.GroupBox(
             highlight_method="block",
             background=colors[6],
             this_current_screen_border=colors[0],
         ),
-        widget.Prompt(),
-        extwidget.GlobalMenu(),
-        widget.Spacer(),
-        widget.CPU(),
-        widget.ThermalSensor(),
-        widget.Memory(fmt="RAM {}"),
-        widget.DF(fmt="HDD {}", visible_on_warn=False, warn_space=80),
-        widget.Net(fmt="NET {}"),
-        widget.Spacer(),
-        widget.KeyboardLayout(fmt=" LANG: {} ", configured_keyboards=["us", "ru"]),
-        widget.Volume(fmt=" VOL: {} ", background=colors[5]),
-        widget.Battery(
-            charge_char="now ",
-            discharge_char="left",
-            format="{percent:2.0%} {char}",
-            background=colors[4],
-            fmt=" BAT: {} "
+        widget.CheckUpdates(
+            distro="Arch_checkupdates",
+            no_update_string="Up to date",
+            fmt="  {}  ",
+            background=colors[1],
         ),
-        widget.Clock(format="%d/%m/%y | %H:%M", background=colors[1], fmt=" {} "),
+        widget.Prompt(),
+        widget.Spacer(),
+        widget.Wttr(location={"MSK": "Moscow"}, fmt="  {}  ", background=colors[4]),
+        widget.Clock(format="%d/%m/%y | %H:%M", background=colors[4], fmt=" {} "),
+        widget.Spacer(),
+        widget.Systray(padding=8)
+        if not is_wayland()
+        else widget.StatusNotifier(padding=8),
+        widget.Sep(padding=8, linewidth=0),
+        widget.GenPollCommand(
+            cmd=["xkblayout-state", "print", "%s"],
+            parse=lambda v: f"{v.strip().upper()}",
+            update_interval=.25,
+            mouse_callbacks={
+                'Button1': lambda: subprocess.run([
+                    'xkblayout-state', 'set', '+1'
+                ])
+            },
+            background=colors[1]
+        ),
+        widget.Volume(
+            fmt="VOL: {}",
+            background=colors[6],
+            mouse_callbacks={"Button3": lazy.spawn("pavucontrol")}
+        ),
+        widget.GenPollCommand(
+            background=colors[6],
+            cmd=["wpctl", "get-volume", "@DEFAULT_AUDIO_SOURCE@"],
+            parse=lambda v: f"MIC: {parse_mic(v)}",
+            update_interval=.25,
+            mouse_callbacks={
+                'Button1': lazy.spawn('wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle'),
+                'Button4': lazy.spawn('wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SOURCE@ 1%+'),
+                'Button5': lazy.spawn('wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 1%-'),
+            },
+        ),
+        widget.Bluetooth(
+            default_show_battery=True,
+            background=colors[3],
+            mouse_callbacks={"Button1": lazy.spawn("blueman-manager")}
+        ),
     ],
-    26,
-    opacity=.90,
+    24,
+    opacity=1,
 )
 
-__all__ = ("leftbar", "bottombar")
+__all__ = ("topbar")

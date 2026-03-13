@@ -1,0 +1,64 @@
+[global]
+    play_sound = true
+    script = ~/.config/dunst/script.sh
+    # Display
+    monitor = 0
+    follow = mouse
+    width = 350
+    height = 150
+    origin = top-center
+    offset = 15x50
+    notification_limit = 5
+
+    # Appearance
+    frame_width = 2
+    frame_color = "#d65d0e"
+    separator_height = 2
+    separator_color = frame
+    corner_radius = 0
+    padding = 12
+    horizontal_padding = 15
+    text_icon_padding = 15
+    icon_position = left
+    max_icon_size = 48
+    transparency = 10
+
+    # Text
+    font = Fira Code Semibold 10
+    markup = full
+    format = "<b>%s</b>\n%b"
+    alignment = left
+    word_wrap = yes
+    ellipsize = middle
+
+    # Behavior
+    idle_threshold = 120
+    show_age_threshold = 60
+    sort = yes
+    mouse_left_click = close_current
+    mouse_middle_click = do_action
+    mouse_right_click = close_all
+
+    # Progress bar
+    progress_bar = true
+    progress_bar_height = 10
+    progress_bar_frame_width = 1
+    progress_bar_corner_radius = 0
+
+[urgency_low]
+    background = "#282828"
+    foreground = "#ebdbb2"
+    frame_color = "#689d6a"
+    timeout = 5
+
+[urgency_normal]
+    background = "#282828"
+    foreground = "#ebdbb2"
+    frame_color = "#d79921"
+    timeout = 10
+
+[urgency_critical]
+    background = "#1d2021"
+    foreground = "#fb4934"
+    frame_color = "#cc241d"
+    timeout = 0

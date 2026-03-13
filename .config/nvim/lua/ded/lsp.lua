@@ -1,6 +1,3 @@
-local loaded, lsp = pcall(require, "lspconfig")
-if not loaded then return end
-
 local key = require("ded.key")
 
 key.nmap("<leader>e", "<cmd>lua vim.diagnostic.open_float()<CR>")
@@ -9,7 +6,6 @@ key.nmap("]d", "<cmd>lua vim.diagnostic.goto_next()<CR>")
 key.nmap("<leader>q", "<cmd>lua vim.diagnostic.setloclist()<CR>")
 
 local on_attach = function(client, bufnr)
-    -- Mappings.
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     key.bnmap(bufnr, "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>")
     key.bnmap(bufnr, "gd", "<cmd>lua vim.lsp.buf.definition()<CR>")
@@ -30,12 +26,13 @@ local setup = function(name, settings)
         capabilities = lspcmp.default_capabilities(capabilities)
         -- capabilities = lspcmp.update_capabilities(capabilities) -- deprecated
     end
-    lsp[name].setup {
+    vim.lsp.config(name, {
         on_attach = on_attach,
         capabilities = capabilities,
         settings = settings,
-    }
-    lsp[name].manager.try_add()
+        autostart = true,
+    })
+    vim.lsp.enable(name)
 end
 
 return { setup = setup }

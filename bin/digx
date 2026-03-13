@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+dig -x $(dig $1 +short) +short

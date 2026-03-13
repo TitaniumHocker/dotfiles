@@ -4,6 +4,7 @@
 .config/emacs/elpa
 .config/emacs/melpa
 .config/emacs/.last-package-udate-day
+.config/gzdoom
 /#*#
 /*~
 __pycache__

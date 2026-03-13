@@ -22,6 +22,7 @@ vim.opt.colorcolumn = "80"            -- Show column at 80
 vim.opt.pumheight = 8                 -- PopUpMenu height
 vim.opt.signcolumn = "yes"            -- Always show sign column
 vim.opt.cursorline = true             -- Show cursor line
+vim.opt.winborder = "rounded"         -- rounded border for windows with types
 vim.opt.exrc = true                   -- Source .nvimrc, .vimrc and .exrc in CWD
 vim.opt.secure = true                 -- Disable 'exrc' if files not owned by you
 vim.opt.termguicolors = true          -- Force to ensure normal colors support
@@ -41,8 +42,8 @@ vim.opt.completeopt = {               -- For nvim-cmp:
 
 -- Additional shit
 -- vim.g["python_highlight_all"] = true  -- Additional syntax highligting for python
-vim.g["neovide_transparency"] = 0.80  -- Transparency for NeoVide GUI
-vim.opt.guifont = "Iosevka Term Extended:h11"  -- Set font for GUI mode
+-- vim.g["neovide_transparency"] = 0.80  -- Transparency for NeoVide GUI
+-- vim.opt.guifont = "Iosevka Term Extended:h11"  -- Set font for GUI mode
 vim.g["python_indent"] = {
     open_paren = 'shiftwidth()',
     -- nested_paren = 'shiftwidth()',

@@ -20,5 +20,10 @@ def powerline(rl, fg, bg):
         uc = ""
     return widget.TextBox(text=uc, padding=0, fontsize=24, foreground=fg, background=bg)
 
+def parse_mic(raw: str) -> str:
+    try:
+        return f"{int(float(raw.split(':')[1].strip()) * 100)}%"
+    except ValueError:
+        return "M"
 
 __all__ = ("has_cmd", "is_wayland", "powerline")

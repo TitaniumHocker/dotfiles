@@ -3,9 +3,9 @@ from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 
 from const import colors, mod
-from statusbar import bottombar, leftbar
+from statusbar import topbar
 
-border_focus = "#d75f5f"
+border_focus = colors[4]
 border_normal = colors[0]
 
 ## LAYOUTS
@@ -14,7 +14,7 @@ layouts = [
         border_focus=border_focus,
         border_normal=border_normal,
         border_width=2,
-        margin=6,
+        margin=4,
     ),
     layout.Max(),
     # layout.Stack(num_stacks=2),
@@ -22,14 +22,14 @@ layouts = [
         border_focus=border_focus,
         border_normal=border_normal,
         border_width=2,
-        margin=6,
+        margin=4,
     ),
     # layout.Matrix(),
     layout.MonadTall(
         border_focus=border_focus,
         border_normal=border_normal,
         border_width=2,
-        margin=6,
+        margin=4,
     ),
     # jlayout.MonadWide(),
     # layout.RatioTile(),
@@ -50,8 +50,7 @@ extension_defaults = widget_defaults.copy()
 
 screens = [
     Screen(
-        left=leftbar,
-        bottom=bottombar,
+        top=topbar,
         wallpaper="~/.config/qtile/wallpaper.jpg",
         wallpaper_mode="fill",
     ),
@@ -81,6 +80,11 @@ floating_layout = layout.Floating(
         Match(wm_class="ssh-askpass"),  # ssh-askpass
         Match(title="branchdialog"),  # gitk
         Match(title="pinentry"),  # GPG key password entry
+        Match(wm_class="pavucontrol"),  # Volume settings
+        Match(wm_class="NoiseTorch"),
+        Match(wm_class="Telegram"),
+        Match(title="Bitwarden"),
+        Match(wm_class="blueman-manager"),
     ]
 )
 

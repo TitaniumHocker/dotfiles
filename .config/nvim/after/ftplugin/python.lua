@@ -1,1 +1,3 @@
-require("ded.lsp").setup("pyright", {})
+-- require("ded.lsp").setup("pyright", {})
+vim.treesitter.start()
+

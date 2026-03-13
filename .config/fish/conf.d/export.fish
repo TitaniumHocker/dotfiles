@@ -7,3 +7,5 @@ else if type vim >/dev/null 2>&1
 else
     set --export EDITOR vi
 end
+
+set --export PYTHONSTARTUP $HOME/.pythonstartup

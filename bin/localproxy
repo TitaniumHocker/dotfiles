@@ -1,0 +1,91 @@
+#!/usr/bin/env sh
+
+# Simple script for creating local tcp proxy to actual destination via socat
+
+set -e
+
+USAGE=$(cat <<EOF
+Usage: $0 [-h|--help] <host:port> [host:port] ...
+
+Simple script for creating local tcp proxy to actual
+destination via socat.
+
+Flags:
+    -h|--help Show this message and exit.
+
+Examples:
+    $0 example.com:80 example.com:443
+    $0 api.example.com:8080 example.com:3000
+EOF
+)
+
+if [ $# -eq 0 ] || [ $1 = "-h" ] || [ $1 = "--help" ]; then
+    echo "$USAGE"
+    exit 0
+fi
+
+if ! command -v socat >/dev/null 2>&1; then
+    echo "Error: can't find socat." 1>&2
+    exit 2
+fi
+if ! command -v sed >/dev/null 2>&1; then
+    echo "Error: can't find sed." 1>&2
+    exit 2
+fi
+
+PIDS_FILE="/tmp/localproxy_pids_$$"
+trap 'rm -f "$PIDS_FILE"' EXIT
+
+cleanup() {
+    echo ""
+    echo "Stopping localproxy..."
+
+    if [ -f "$PIDS_FILE" ]; then
+        while read -r pid; do
+            kill "$pid" 2>/dev/null || true
+        done < "$PIDS_FILE"
+    fi
+
+    echo "All stopped."
+    exit 0
+}
+
+for arg in "$@"; do
+    port=$(echo "$arg" | sed -n 's/^.*:\([0-9][0-9]*\)$/\1/p')
+
+    if [ -z "$port" ]; then
+        echo "Error: unexpected format '$arg'. Use host:port." 1>&2
+        exit 3
+    fi
+
+    if [ "$port" -lt 1024 ] && [ ! "$(id -u)" -eq 0 ]; then
+        echo "Found port that requires root, requesting sudo..." 1>&2
+        exec sudo "$0" "$@"
+    fi
+done
+
+
+echo "Starting localproxy:"
+echo ""
+for arg in "$@"; do
+    host=$(echo "$arg" | sed 's/:[0-9][0-9]*$//')
+    port=$(echo "$arg" | sed -n 's/^.*:\([0-9][0-9]*\)$/\1/p')
+    if [ -n "$host" ] && [ -n "$port" ]; then
+        echo "  localhost:$port -> $host:$port"
+        socat "TCP-LISTEN:$port,fork,reuseaddr" "TCP:$host:$port" &
+        echo $! >> "$PIDS_FILE"
+    fi
+done
+echo ""
+pid_count=$(wc -l < "$PIDS_FILE")
+echo "Started proxies: $pid_count"
+while read -r pid; do
+    echo "  PID: $pid"
+done < "$PIDS_FILE"
+
+echo ""
+echo "Use Ctrl+C to shutdown."
+
+trap cleanup INT TERM
+
+wait

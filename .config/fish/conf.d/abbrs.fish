@@ -34,12 +34,24 @@ if status is-interactive
 
     if type git >/dev/null 2>&1
         abbr g git
+        abbr gc git commit
+        abbr gca git commit --amend --no-edit
         abbr gs git status
         abbr gb git branch
         abbr gw git worktree
+        abbr gr git rebase
+        abbr gri git rebase -i
+        abbr grc git rebase --continue
+        abbr gra git reabse --abort
+        abbr gp git push --force
+        abbr gpf git push --force
     end
 
     if type nvim >/dev/null 2>&1
         abbr e nvim
     end
+
+    # if type bat >/dev/null 2>&1
+    #     abbr lsblk "lsblk | bat -l conf -p"
+    # end
 end

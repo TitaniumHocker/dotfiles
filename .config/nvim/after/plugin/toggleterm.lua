@@ -12,6 +12,7 @@ toggleterm.setup {
             return vim.o.columns * .4
         end
     end,
+    env = {FISH_NO_TMUX = "1"},
 }
 
 local lazygit = Terminal:new({cmd = "lazygit", hidden = true, env = {FISH_NO_TMUX = "1"}})

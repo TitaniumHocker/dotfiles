@@ -1,9 +1,10 @@
 from const import mod, terminal
-from libqtile.config import Key
+from libqtile.config import Key, EzKey
 from libqtile.lazy import lazy
 
 rofi_shutdown = "rofi -show power-menu -modi power-menu:rofi-power-menu -theme-str 'window {width: 8em;} listview {lines: 6;}'"
 rofi_drun = "rofi -show drun -theme-str 'window {width: 24em;}'"
+rofi_network = "networkmanager_dmenu"
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -52,7 +53,7 @@ keys = [
     ),
     Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
-    Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
+    Key([mod, "control"], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with
@@ -81,4 +82,12 @@ keys = [
         lazy.spawncmd(),
         desc="Spawn a command using a prompr widget",
     ),
+    Key([mod], "n", lazy.spawn(rofi_network), desc="Spawn networkmanager_dmenu"),
+    Key([mod], "p", lazy.spawn("pavucontrol"), desc="Spawn pavucontrol"),
+    Key([mod, "shift"], "p", lazy.spawn("noisetorch"), desc="Spawn noisetorch"),
+    Key([mod], "t", lazy.spawn("Telegram"), desc="Spawn Telegram"),
+    Key([], "XF86AudioRaiseVolume", lazy.spawn("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 1%+")),
+    Key([], "XF86AudioLowerVolume", lazy.spawn("wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-")),
+    Key(["mod1"], "Escape", lazy.spawn("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle")),
+    Key([mod], "Print", lazy.spawn("sh -c 'maim -s | xclip -selection clipboard -t image/png'"), desc="Screenshot to clipboard"),
 ]

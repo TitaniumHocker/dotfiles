@@ -1,10 +1,18 @@
-from libqtile.config import Group, Key
+from libqtile.config import Group, Key, Match
 from libqtile.lazy import lazy
 
 from const import mod
 from keys import keys
 
-groups = [Group(i) for i in "123456789"]
+groups_template = {
+    "a": ["kitty", "yandex-browser"],
+    "s": ["Mail", "teams-for-linux"],
+    "d": ["claude-desktop", "obsidian"],
+    "z": [],
+    "x": [],
+    "c": ["steam", "ts3client_linux_amd64"],
+}
+groups = [Group(k, matches=[Match(wm_class=i) for i in v]) for k, v in groups_template.items()]
 
 for i in groups:
     keys.extend(
@@ -23,10 +31,6 @@ for i in groups:
                 lazy.window.togroup(i.name, switch_group=True),
                 desc="Switch to & move focused window to group {}".format(i.name),
             ),
-            # Or, use below if you prefer not to switch to that group.
-            # # mod1 + shift + letter of group = move focused window to group
-            # Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
-            #     desc="move focused window to group {}".format(i.name)),
         ]
     )
 

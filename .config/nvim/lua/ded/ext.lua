@@ -41,7 +41,6 @@ return packer.startup(function(use)
 
     -- Themes
     use "sainnhe/gruvbox-material"      -- Old good gruvbox
-    -- use "tanvirtin/monokai.nvim"        -- monokai(from sublimetext)
 
     -- Tweaks
     use "windwp/nvim-autopairs"         -- Autopairs, integrates with cmp and treesitter
@@ -53,7 +52,6 @@ return packer.startup(function(use)
     use "akinsho/toggleterm.nvim"       -- Nice tetminal
     use "lewis6991/gitsigns.nvim"       -- Git integration
     use "numToStr/Comment.nvim"         -- Comment things as Jedi
-    use 'simrat39/symbols-outline.nvim' -- Tree for code symbols(like ctags)
 
     -- Visual additions
     use "hoob3rt/lualine.nvim"          -- Airline implementation in lua
@@ -62,13 +60,9 @@ return packer.startup(function(use)
     -- Syntax
     use {
         'nvim-treesitter/nvim-treesitter',
-        run = ':TSUpdate'
+        run = ':TSUpdate',
+        branch = 'main'
     }
-    use "nvim-treesitter/nvim-treesitter-textobjects"
-    use "Glench/Vim-Jinja2-Syntax"      -- Jinja2 syntax support
-    use "saltstack/salt-vim"            -- Support for saltstack(sls) filetype
-    use "chr4/nginx.vim"                -- Support for nginx config filetype
-
     -- LSP and stuff
     use "neovim/nvim-lspconfig"         -- LSP configurations
     use "hrsh7th/nvim-cmp"              -- Completion engine
@@ -77,16 +71,9 @@ return packer.startup(function(use)
     use "hrsh7th/cmp-path"              -- Completions based on path
     use "hrsh7th/cmp-cmdline"           -- Completions based on command line
     use "hrsh7th/cmp-nvim-lua"          -- Completions for lua based config
-    use "jose-elias-alvarez/null-ls.nvim" -- Adapter for formatters and linters
     use "folke/trouble.nvim"            -- Prettify LSP results
     use "ray-x/lsp_signature.nvim"      -- Show signatures
-
-    -- Start screen
-    use {
-        "glepnir/dashboard-nvim",  -- Awesome dashboard
-        requires = {'nvim-tree/nvim-web-devicons'}
-    }
-    use "ahmedkhalf/project.nvim"       -- Project management
+    use "hedyhli/outline.nvim"          -- Code outline
 
     if autoinstalled then
         require("packer").sync()
