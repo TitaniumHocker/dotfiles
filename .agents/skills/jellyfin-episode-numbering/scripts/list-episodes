@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+"""Dump one show's episodes together with their file paths.
+
+    list-episodes "Инуяша"                      # find the show by name, dump episodes
+    list-episodes --series-id 74d3...           # when the id is already known
+    list-episodes --series-id 74d3... --path-contains "Saga 2"   # one season folder
+
+Stdout is the JSON from jellyroller as is; `plan-template` and `apply` consume it.
+Progress notes go to stderr, so `> ep.json` stays clean.
+
+Why not call `jellyroller search-media` directly: its default `-m all` crashes with
+"error decoding response body" whenever a Season shows up in the results. Here the
+media type is always explicit.
+"""
+import argparse
+import json
+import subprocess
+import sys
+
+
+def jr(*args):
+    """Run jellyroller, return stdout. Die with a readable message on failure."""
+    p = subprocess.run(["jellyroller", *args], capture_output=True, text=True)
+    if p.returncode != 0:
+        sys.exit(f"jellyroller {' '.join(args)}\n{p.stdout}{p.stderr}".rstrip())
+    return p.stdout
+
+
+def parse(out):
+    try:
+        return json.loads(out)
+    except json.JSONDecodeError:
+        sys.exit(f"could not parse the jellyroller response:\n{out[:500]}")
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("term", nargs="?", help="show name as displayed in Jellyfin")
+    ap.add_argument("--series-id", help="show id, when known")
+    ap.add_argument("--path-contains", help="keep only files whose path contains this substring. "
+                                            "Needed when seasons live in folders without 'Season N'")
+    args = ap.parse_args()
+
+    series_id = args.series_id
+    if not series_id:
+        if not args.term:
+            ap.error("either term or --series-id is required")
+        found = [(i["Id"], i.get("Name", ""), i.get("Path", ""))
+                 for i in parse(jr("search-media", "-t", args.term,
+                                   "-m", "series", "-o", "json", "-f"))["Items"]]
+        if not found:
+            sys.exit(f"no shows found for {args.term!r}.\n"
+                     "Jellyfin matches the display name — try the Russian title.")
+        if len(found) > 1:
+            print(f"{len(found)} shows matched — pick one with --series-id:", file=sys.stderr)
+            for i, n, p in found:
+                print(f"  {i}  {n}  ({p})", file=sys.stderr)
+            sys.exit(1)
+        series_id, name, path = found[0]
+        print(f"Show: {name}  id={series_id}  {path}", file=sys.stderr)
+
+    data = parse(jr("search-media", "-t", "", "-p", series_id, "-m", "episode", "-o", "json", "-f"))
+    total = len(data["Items"])
+    if args.path_contains:
+        items = [i for i in data["Items"] if args.path_contains in (i.get("Path") or "")]
+        if not items:
+            sys.exit(f"--path-contains {args.path_contains!r} matched none of the {total} episodes.\n"
+                     "Check the folder name — the filter is a plain case-sensitive substring.")
+        data = {"Items": items, "TotalRecordCount": len(items), "StartIndex": 0}
+
+    print(f"Episodes: {len(data['Items'])}" + (f" (of {total})" if args.path_contains else ""),
+          file=sys.stderr)
+    json.dump(data, sys.stdout, ensure_ascii=False, indent=2)
+    print()
+
+
+if __name__ == "__main__":
+    main()

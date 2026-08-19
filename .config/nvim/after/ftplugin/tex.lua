@@ -9,5 +9,3 @@ cmp.setup.buffer({
         { name = "path" },
     }
 })
-vim.treesitter.start()
-

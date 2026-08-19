@@ -1,0 +1,26 @@
+{
+  "lastChangelogVersion": "0.82.1",
+  "theme": "light",
+  "packages": [
+    "npm:pi-mcp-adapter",
+    "npm:pi-subagents",
+    "npm:context-mode",
+    "npm:@dietrichgebert/ponytail",
+    "npm:pi-lens",
+    "npm:pi-web-access",
+    "npm:@vigolium/piolium",
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:@gotgenes/pi-permission-system",
+    "npm:@juicesharp/rpiv-todo",
+    "npm:@narumitw/pi-goal",
+    "npm:pi-powerline-footer"
+  ],
+  "defaultProvider": "ai.ifedorov.me",
+  "defaultModel": "z-ai/glm-5.2",
+  "hideThinkingBlock": true,
+  "quietStartup": true,
+  "defaultThinkingLevel": "high",
+  "workingVibeModel": "ai.ifedorov.me/logovo/qwen3.6-35b-a3b",
+  "workingVibe": "Supernatural",
+  "enabledModels": []
+}

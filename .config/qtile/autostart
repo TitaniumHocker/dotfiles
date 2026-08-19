@@ -6,7 +6,7 @@ if [ ! -z "$(xrandr | grep DP-0 | grep connected | grep "3440")" ]; then
     xrandr --output DP-0 --mode 3440x1440 --rate 180.00
 fi
 
-picom &
+# picom &
 kitty &
 yandex-browser-stable &
 Telegram &
@@ -15,7 +15,5 @@ teams-for-linux &
 thunderbird &
 nextcloud &
 noisetorch -i $(noisetorch -l | grep -i -A1 Razer | grep -i id | awk -F: '{print $2}') &
-mattermost-desktop &
-clause-desktop &
 obsidian &
 teamspeak3 &

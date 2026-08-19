@@ -1,0 +1,209 @@
+#!/usr/bin/env python3
+"""Write season/episode numbers into Jellyfin via `jellyroller update-metadata`.
+
+    apply --plan plan.tsv --items episodes.json --dry-run     # show, write nothing
+    apply --plan plan.tsv --items episodes.json --only <ID>   # a single episode
+    apply --plan plan.tsv --items episodes.json --set-name    # also set episode names
+    apply --plan plan.tsv --items episodes.json               # everything
+
+Rows marked confidence=uncertain are skipped unless --include-uncertain is given.
+
+WHY THE PATCH LOOKS THE WAY IT DOES (established experimentally, see SKILL.md):
+
+* `update-metadata` is a raw POST of the file to /Items/{id}. Any field missing from
+  the JSON is WIPED, so fields worth keeping must be resent (OfficialRating).
+* Jellyfin returns 400 unless ProviderIds + Genres + Tags are all present. Any two of
+  them still fail, so all three always go out, empty.
+* The JSON from `search-media` carries OpenAPI schema placeholders
+  (ProviderIds = {"property1": "", ...}), so it must never be echoed back verbatim.
+  Hence the explicit whitelist below.
+"""
+import argparse
+import csv
+import json
+import os
+import re
+import subprocess
+import sys
+import tempfile
+
+# Filled fields that would be wiped unless resent. Short on purpose: jellyroller
+# requests /Items without `fields`, so Overview, Tags, Studios and friends never
+# arrive at all and cannot be preserved no matter what is listed here.
+PRESERVE = ["OfficialRating", "PremiereDate", "ProductionYear"]
+
+# Mandatory, otherwise 400. All three, always.
+REQUIRED_EMPTY = {"ProviderIds": {}, "Genres": [], "Tags": []}
+
+# "137. Имя прародительницы - Кагоме" -> "Имя прародительницы - Кагоме"
+LEADING_NUM = re.compile(r"^\d{1,3}(?:\s*-\s*\d{1,3})?\s*[.\-_)]\s*")
+
+# Release-group tail: never part of an episode title.
+RELEASE_JUNK = re.compile(
+    r"\[[^\]]*\]|\([^)]*\)"
+    r"|\b\d{3,4}[pi]\b|\bx?26[45]\b|\bhevc\b|\bavc\b|\baac\b|\bac3\b"
+    r"|\bblu-?ray\b|\bweb-?dl\b|\bwebrip\b|\bhdtv\b|\bbdrip\b|\blq\b|\b\d{1,2}bit\b",
+    re.IGNORECASE,
+)
+CYRILLIC = re.compile(r"[а-яёА-ЯЁ]")
+
+
+def clean_title(path):
+    """Filename -> episode title candidate. May return junk; the caller decides."""
+    stem = os.path.splitext(os.path.basename(path))[0]
+    t = RELEASE_JUNK.sub(" ", LEADING_NUM.sub("", stem)).replace("_", " ")
+    # Dots separate words only in names like Show.S01E01.BDRip, which have no spaces.
+    # In a real title they are part of the text: «Колодец-Костоглот... Я снова дома!»
+    if " " not in t.strip():
+        t = t.replace(".", " ")
+    return re.sub(r"[ \t]+", " ", t).strip(" -–—,")
+
+
+def episode_name(item, index, explicit=""):
+    """Episode title, by descending priority:
+
+    1. `new_name` from the plan — whatever the agent or human decided;
+    2. a meaningful Russian title taken from the filename;
+    3. «Эпизод N» — last resort, identical to Jellyfin's own default.
+
+    Transliteration, latin tech junk and a copy of the show title are not titles
+    (`Vinland_Saga_[01]_[AniLibria_TV]`) — there the number is more useful.
+    """
+    if explicit.strip():
+        return explicit.strip()
+    fallback = f"Эпизод {index}"
+    t = clean_title(item.get("Path", ""))
+    if len(t) < 3 or not CYRILLIC.search(t):
+        return fallback
+    series = re.sub(r"\s+", " ", (item.get("SeriesName") or "").replace("_", " ")).strip().lower()
+    return fallback if series and t.lower() == series else t
+
+
+def build_patch(item, row, set_name):
+    patch = {"Id": item["Id"]}
+    for f in PRESERVE:
+        if item.get(f) not in ("", 0, [], {}, None):
+            patch[f] = item[f]
+    patch["IndexNumber"] = int(row["new_e"])
+    # Name is always sent: a field missing from the body gets wiped. But it must never
+    # go out empty — that would replace a title with nothing at all.
+    name = (episode_name(item, patch["IndexNumber"], row.get("new_name", ""))
+            if set_name else (item.get("Name") or "").strip())
+    patch["Name"] = name or f"Эпизод {patch['IndexNumber']}"
+    if row["new_s"].strip() not in ("", "-"):
+        patch["ParentIndexNumber"] = int(row["new_s"])
+    if row.get("new_e_end", "").strip() not in ("", "-"):
+        patch["IndexNumberEnd"] = int(row["new_e_end"])
+    patch.update(REQUIRED_EMPTY)
+    return patch
+
+
+def push(item_id, patch):
+    with tempfile.NamedTemporaryFile("w", suffix=".json", encoding="utf-8", delete=False) as f:
+        json.dump(patch, f, ensure_ascii=False, indent=2)
+        tmp = f.name
+    try:
+        p = subprocess.run(["jellyroller", "update-metadata", "-i", item_id, "-f", tmp],
+                           capture_output=True, text=True)
+        out = (p.stdout + p.stderr).strip()
+        return "successfully updated" in p.stdout, (out.splitlines() or ["no output"])[-1]
+    finally:
+        os.unlink(tmp)
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--plan", required=True, help="filled TSV (skeleton from scripts/plan-template)")
+    ap.add_argument("--items", required=True, help="JSON from scripts/list-episodes")
+    ap.add_argument("--dry-run", action="store_true", help="print patches, write nothing")
+    ap.add_argument("--only", help="apply to this item id only")
+    ap.add_argument("--set-name", action="store_true", help="also set the episode Name")
+    ap.add_argument("--include-uncertain", action="store_true", help="also write confidence=uncertain rows")
+    args = ap.parse_args()
+
+    with open(args.plan, encoding="utf-8") as f:
+        rows = list(csv.DictReader(f, delimiter="\t"))
+    try:
+        items = {i["Id"]: i for i in json.load(open(args.items, encoding="utf-8"))["Items"]}
+    except (json.JSONDecodeError, KeyError, TypeError):
+        sys.exit(f"{args.items} is not the JSON produced by list-episodes")
+    if rows and not {"new_e", "confidence", "path"} <= set(rows[0]):
+        sys.exit(f"{args.plan} is not the TSV produced by plan-template")
+
+    applied, skipped, failed = [], [], []
+
+    for row in rows:
+        fname = os.path.basename(row["path"])
+        item = items.get(row["id"])
+        if item is None:
+            skipped.append((fname, "no such id in --items"))
+            continue
+        if args.only and row["id"] != args.only:
+            continue
+        if row["new_e"].strip() in ("", "-"):
+            skipped.append((fname, row["why"] or "no number assigned"))
+            continue
+        if row["confidence"].strip() == "uncertain" and not args.include_uncertain:
+            skipped.append((fname, f"uncertain: {row['why']}"))
+            continue
+
+        patch = build_patch(item, row, args.set_name)
+        label = f"S{patch.get('ParentIndexNumber','?'):>2}E{patch['IndexNumber']:>3}  {fname}"
+
+        if args.dry_run:
+            print(f"[dry-run] {label}")
+            print("          " + json.dumps(patch, ensure_ascii=False)[:200])
+            applied.append(fname)
+            continue
+
+        ok, msg = push(row["id"], patch)
+        if ok:
+            print(f"OK   {label}")
+            applied.append(fname)
+        else:
+            print(f"FAIL {label}  <- {msg}")
+            failed.append((fname, msg))
+
+    print(f"\n{'=' * 60}\nSUMMARY")
+    print(f"  {'planned' if args.dry_run else 'written'}: {len(applied)}")
+    print(f"  skipped:  {len(skipped)}")
+    print(f"  failed:   {len(failed)}")
+    for title, group in (("Skipped (needs hands)", skipped), ("Failed", failed)):
+        if group:
+            print(f"\n{title}:")
+            for f, why in group:
+                print(f"  {f}\n      {why}")
+    return 1 if failed else 0
+
+
+def demo():
+    """Self-check for the patch builder — its output goes into an irreversible write."""
+    item = {"Id": "abc", "Path": "/x/07. Поединок.mkv", "Name": "Japanese",
+            "OfficialRating": "PG-13", "ProviderIds": {"property1": ""}}
+
+    p = build_patch(item, {"new_e": "7", "new_s": "1", "new_e_end": "-"}, set_name=True)
+    assert (p["IndexNumber"], p["ParentIndexNumber"], p["Name"]) == (7, 1, "Поединок")
+    assert p["OfficialRating"] == "PG-13", "a filled field must be carried over or it gets wiped"
+    assert p["ProviderIds"] == {}, "schema placeholders must not be echoed back"
+    assert set(REQUIRED_EMPTY) <= set(p), "without ProviderIds+Genres+Tags Jellyfin answers 400"
+    assert "IndexNumberEnd" not in p
+
+    p2 = build_patch(item, {"new_e": "21", "new_s": "1", "new_e_end": "22"}, set_name=False)
+    assert p2["IndexNumberEnd"] == 22 and p2["Name"] == "Japanese"
+
+    # An empty Name would erase the title on the server — never send one.
+    blank = {"Id": "x", "Path": "/x/file.mkv", "Name": "  "}
+    assert build_patch(blank, {"new_e": "5", "new_s": "1"}, set_name=False)["Name"] == "Эпизод 5"
+    assert build_patch(blank, {"new_e": "5", "new_s": "1", "new_name": "   "},
+                       set_name=True)["Name"] == "Эпизод 5"
+
+    name = lambda path, i=1, s="": episode_name({"Path": path, "SeriesName": s}, i)
+    assert name("/x/03. Колодец... Я дома!.mkv", 3) == "Колодец... Я дома!"
+    assert name("/x/Vinland_Saga_[01]_[AniLibria_TV]_[WEBRip_1080p-LQ_HEVC].mkv") == "Эпизод 1"
+    assert name("/x/12. Инуяша.mkv", 12, s="Инуяша") == "Эпизод 12"
+    assert episode_name({"Path": "/x/anything.mkv"}, 1, "Пилот") == "Пилот"
+    print("demo ok")
+
+
+if __name__ == "__main__":
+    sys.exit(demo() if len(sys.argv) > 1 and sys.argv[1] == "--demo" else main())

@@ -4,8 +4,8 @@ if not loaded then return end
 signature.setup({
     bind = true,
     hint_prefix = "<> ",
-    transparency = 15,
+    -- transparency = 15,
     handler_opts = {
-        border = "rounded"
+        border = "single"
     }
 })

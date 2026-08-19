@@ -1,0 +1,165 @@
+{
+    "providers": {
+        "work": {
+            "baseUrl": "",
+            "api": "openai-completions",
+            "apiKey": "!jq -j .work_key ~/.pi/agent/secrets.json",
+            "models": [
+                {
+                    "id": "GLM 5.2 FP8",
+                    "name": "Work: GLM 5.2",
+                    "contextWindow": 262144,
+                    "maxTokens": 65536,
+                    "reasoning": true,
+                    "compat": {
+                        "thinkingFormat": "chat-template",
+                        "chatTemplateKwargs": {
+                            "enable_thinking": { "$var": "thinking.enabled" },
+                            "reasoning_effort": { "$var": "thinking.effort" }
+                        }
+                    },
+                    "thinkingLevelMap": {
+                        "minimal": null,
+                        "low": null,
+                        "medium": null,
+                        "high": "high",
+                        "xhigh": null,
+                        "max": "max"
+                    }
+                }
+            ]
+        },
+        "selfhosted": {
+            "baseUrl": "",
+            "api": "openai-completions",
+            "apiKey": "!jq -j .selfhosted_key ~/.pi/agent/secrets.json",
+            "models": [
+                {
+                    "id": "qwen/qwen3.8-27b",
+                    "name": "RouterAI: Qwen 3.8 27B",
+                    "contextWindow": 262144,
+                    "maxTokens": 65536,
+                    "reasoning": true,
+                    "compat": {
+                        "thinkingFormat": "chat-template",
+                        "chatTemplateKwargs": {
+                            "enable_thinking": { "$var": "thinking.enabled" },
+                            "reasoning_effort": { "$var": "thinking.effort" },
+                            "preserve_thinking": true
+                        }
+                    },
+                    "thinkingLevelMap": {
+                        "minimal": null,
+                        "low": "low",
+                        "medium": "medium",
+                        "high": null,
+                        "xhigh": "xhigh",
+                        "max": null
+                    }
+                },
+                {
+                    "id": "deepseek/deepseek-v4-pro",
+                    "name": "RouterAI: DeepSeek V4 Pro",
+                    "contextWindow": 1000000,
+                    "maxTokens": 65536,
+                    "reasoning": true,
+                    "compat": {
+                        "requiresReasoningContentOnAssistantMessages": true,
+                        "thinkingFormat": "deepseek",
+                        "reasoningEffortMap": {
+                            "minimal": "high", "low": "high", "medium": "high",
+                            "high": "high", "xhigh": "max"
+                        }
+                    }
+                },
+                {
+                    "id": "deepseek/deepseek-v4-flash",
+                    "name": "RouterAI: DeepSeek V4 Flash",
+                    "contextWindow": 1000000,
+                    "maxTokens": 65536,
+                    "reasoning": true,
+                    "compat": {
+                        "requiresReasoningContentOnAssistantMessages": true,
+                        "thinkingFormat": "deepseek",
+                        "reasoningEffortMap": {
+                            "minimal": "high", "low": "high", "medium": "high",
+                            "high": "high", "xhigh": "max"
+                        }
+                    }
+                },
+                {
+                    "id": "qwen/qwen3.8-max",
+                    "name": "RouterAI: Qwen 3.8 Max",
+                    "contextWindow": 1000000,
+                    "maxTokens": 65536,
+                    "reasoning": true,
+                    "thinkingLevelMap": {
+                        "minimal": null, "low": "low", "medium": "medium",
+                        "high": null, "xhigh": "xhigh", "max": null
+                    },
+                    "compat": {
+                        "supportsStore": false,
+                        "supportsDeveloperRole": false,
+                        "supportsReasoningEffort": true,
+                        "maxTokensField": "max_completion_tokens",
+                        "thinkingFormat": "openai"
+                    }
+                },
+                {
+                    "id": "moonshotai/kimi-k3",
+                    "name": "RouterAI: Kimi K3",
+                    "contextWindow": 1000000,
+                    "maxTokens": 65536,
+                    "reasoning": true,
+                    "thinkingLevelMap": {
+                        "minimal": null, "low": "low", "medium": null,
+                        "high": "high", "xhigh": null, "max": "max"
+                    },
+                    "compat": {
+                        "supportsDeveloperRole": false,
+                        "supportsReasoningEffort": true,
+                        "requiresReasoningContentOnAssistantMessages": true,
+                        "maxTokensField": "max_completion_tokens",
+                        "thinkingFormat": "openai"
+                    }
+                },
+                {
+                    "id": "z-ai/glm-5.2",
+                    "name": "RouterAI: GLM 5.2",
+                    "contextWindow": 1048576,
+                    "maxTokens": 65536,
+                    "reasoning": true,
+                    "compat": {
+                        "thinkingFormat": "chat-template",
+                        "chatTemplateKwargs": {
+                            "enable_thinking": { "$var": "thinking.enabled" },
+                            "reasoning_effort": { "$var": "thinking.effort" }
+                        }
+                    },
+                    "thinkingLevelMap": {
+                        "minimal": null,
+                        "low": null,
+                        "medium": null,
+                        "high": "high",
+                        "xhigh": null,
+                        "max": "max"
+                    }
+                },
+                {
+                    "id": "logovo/qwen3.6-35b-a3b",
+                    "name": "Logovo: Qwen3.6 35B A3B",
+                    "input": ["text", "image"],
+                    "contextWindow": 262144,
+                    "maxTokens": 32768
+                },
+                {
+                    "id": "logovo/gemma-4-26b-a4b",
+                    "name": "Logovo: Gemma 4 26B A4B",
+                    "input": ["text", "image"],
+                    "contextWindow": 262144,
+                    "maxTokens": 32768
+                }
+            ]
+        }
+    }
+}

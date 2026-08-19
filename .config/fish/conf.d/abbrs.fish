@@ -51,6 +51,10 @@ if status is-interactive
         abbr e nvim
     end
 
+    if type opencode >/dev/null 2>&1
+        abbr oc opencode
+    end
+
     # if type bat >/dev/null 2>&1
     #     abbr lsblk "lsblk | bat -l conf -p"
     # end

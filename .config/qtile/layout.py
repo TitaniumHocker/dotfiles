@@ -7,6 +7,7 @@ from statusbar import topbar
 
 border_focus = colors[4]
 border_normal = colors[0]
+default_margin = 0
 
 ## LAYOUTS
 layouts = [
@@ -14,7 +15,7 @@ layouts = [
         border_focus=border_focus,
         border_normal=border_normal,
         border_width=2,
-        margin=4,
+        margin=default_margin,
     ),
     layout.Max(),
     # layout.Stack(num_stacks=2),
@@ -22,14 +23,14 @@ layouts = [
         border_focus=border_focus,
         border_normal=border_normal,
         border_width=2,
-        margin=4,
+        margin=default_margin,
     ),
     # layout.Matrix(),
     layout.MonadTall(
         border_focus=border_focus,
         border_normal=border_normal,
         border_width=2,
-        margin=4,
+        margin=default_margin,
     ),
     # jlayout.MonadWide(),
     # layout.RatioTile(),

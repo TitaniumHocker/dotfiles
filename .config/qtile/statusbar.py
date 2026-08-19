@@ -23,7 +23,7 @@ topbar = bar.Bar(
         ),
         widget.Prompt(),
         widget.Spacer(),
-        widget.Wttr(location={"MSK": "Moscow"}, fmt="  {}  ", background=colors[4]),
+        widget.Wttr(location={"MSK": "Moscow"}, fmt="  {}  ", background=colors[4], update_interval=60*10),
         widget.Clock(format="%d/%m/%y | %H:%M", background=colors[4], fmt=" {} "),
         widget.Spacer(),
         widget.Systray(padding=8)
@@ -32,7 +32,7 @@ topbar = bar.Bar(
         widget.Sep(padding=8, linewidth=0),
         widget.GenPollCommand(
             cmd=["xkblayout-state", "print", "%s"],
-            parse=lambda v: f"{v.strip().upper()}",
+            parse=lambda v: f"K: {v.strip().upper()}",
             update_interval=.25,
             mouse_callbacks={
                 'Button1': lambda: subprocess.run([
@@ -42,14 +42,14 @@ topbar = bar.Bar(
             background=colors[1]
         ),
         widget.Volume(
-            fmt="VOL: {}",
+            fmt="V: {}",
             background=colors[6],
             mouse_callbacks={"Button3": lazy.spawn("pavucontrol")}
         ),
         widget.GenPollCommand(
             background=colors[6],
             cmd=["wpctl", "get-volume", "@DEFAULT_AUDIO_SOURCE@"],
-            parse=lambda v: f"MIC: {parse_mic(v)}",
+            parse=lambda v: f"M: {parse_mic(v)}",
             update_interval=.25,
             mouse_callbacks={
                 'Button1': lazy.spawn('wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle'),
@@ -58,6 +58,7 @@ topbar = bar.Bar(
             },
         ),
         widget.Bluetooth(
+            fmt="BT: {}",
             default_show_battery=True,
             background=colors[3],
             mouse_callbacks={"Button1": lazy.spawn("blueman-manager")}

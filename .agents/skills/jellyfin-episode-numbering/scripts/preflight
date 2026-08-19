@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+"""Check that JellyRoller is installed, configured and the server answers.
+
+    preflight            # report to stdout
+    preflight --quiet    # exit code only
+
+Exit 0 means work can start. Exit 1 means it cannot, and stderr says what to fix.
+Run this FIRST — the other scripts silently assume it passed.
+"""
+import argparse
+import json
+import shutil
+import subprocess
+import sys
+
+INSTALL_HELP = """
+JellyRoller was not found in PATH.
+
+Install it any of these ways:
+    cargo install jellyroller
+    brew install lschallot/jellyroller/jellyroller
+    scoop bucket add jellyroller https://github.com/LSchallot/JellyRoller ; scoop install jellyroller
+
+Source and releases: https://github.com/LSchallot/JellyRoller
+"""
+
+AUTH_HELP = """
+JellyRoller is installed but not connected to a server.
+
+Configure it interactively (it asks for server URL, username and password):
+    jellyroller
+
+Or rebuild the connection from scratch:
+    jellyroller reconfigure
+"""
+
+
+def fail(msg, help_text, quiet):
+    if not quiet:
+        print(f"NO   {msg}", file=sys.stderr)
+        print(help_text, file=sys.stderr)
+    sys.exit(1)
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--quiet", action="store_true")
+    args = ap.parse_args()
+    say = (lambda *a: None) if args.quiet else print
+
+    if not shutil.which("jellyroller"):
+        fail("jellyroller is not installed", INSTALL_HELP, args.quiet)
+
+    ver = subprocess.run(["jellyroller", "--version"], capture_output=True, text=True)
+    if ver.returncode != 0:
+        fail("jellyroller does not run", INSTALL_HELP, args.quiet)
+    say(f"OK   {ver.stdout.strip()}")
+
+    # The only honest authorization check is a request that needs credentials.
+    # Do not probe for a config file: its location differs per platform.
+    info = subprocess.run(["jellyroller", "server-info"], capture_output=True, text=True)
+    if info.returncode != 0:
+        fail(f"server unreachable or key invalid:\n     {(info.stdout + info.stderr).strip()[:200]}",
+             AUTH_HELP, args.quiet)
+    try:
+        server = json.loads(info.stdout)
+    except json.JSONDecodeError:
+        fail(f"server-info did not return JSON:\n     {info.stdout[:200]}", AUTH_HELP, args.quiet)
+    say(f"OK   Jellyfin {server.get('Version')} — {server.get('ServerName', '')}")
+
+    # Libraries listing proves the key is an admin one, not just that the server is up.
+    libs = subprocess.run(["jellyroller", "get-libraries", "-o", "json"], capture_output=True, text=True)
+    if libs.returncode != 0:
+        fail("get-libraries failed — the key lacks admin rights", AUTH_HELP, args.quiet)
+    try:
+        tv = [l for l in json.loads(libs.stdout) if l.get("CollectionType") == "tvshows"]
+    except (json.JSONDecodeError, TypeError):
+        fail("could not parse the get-libraries response", AUTH_HELP, args.quiet)
+
+    say(f"OK   TV libraries: {len(tv)}")
+    for l in tv:
+        say(f"       {l.get('Name')}  {l.get('Locations')}")
+    if not tv:
+        say("WARNING: no tvshows libraries — nothing to number.")
+
+    say("\nReady.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

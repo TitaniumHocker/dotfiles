@@ -41,7 +41,7 @@ vim.opt.completeopt = {               -- For nvim-cmp:
 }
 
 -- Additional shit
--- vim.g["python_highlight_all"] = true  -- Additional syntax highligting for python
+vim.g["python_highlight_all"] = true  -- Additional syntax highligting for python
 -- vim.g["neovide_transparency"] = 0.80  -- Transparency for NeoVide GUI
 -- vim.opt.guifont = "Iosevka Term Extended:h11"  -- Set font for GUI mode
 vim.g["python_indent"] = {

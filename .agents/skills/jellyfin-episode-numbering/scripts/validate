@@ -1,0 +1,127 @@
+#!/usr/bin/env python3
+"""Check the filled table before writing: duplicates, gaps, unfilled rows.
+
+    validate plan.tsv
+    validate --expect-count 24 plan.tsv     # also compare against the file count
+
+Exit code 1 means there is a blocker and nothing may be written.
+
+This checks mechanics, not meaning: that numbers do not repeat, run without gaps and
+that every row was actually filled in. Whether the numbers are *correct* cannot be
+checked here — that is on whoever read the paths, and on the human reviewing the table.
+
+Double episodes (new_e_end) occupy the whole new_e..new_e_end range, so 21-22 does not
+leave a gap at 22.
+"""
+import argparse
+import csv
+import os
+import sys
+from collections import defaultdict
+
+VALID_CONFIDENCE = {"high", "medium", "uncertain"}
+REQUIRED_COLUMNS = {"new_s", "new_e", "new_e_end", "confidence", "why", "path"}
+UNSET = ("", "-")
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("infile", nargs="?", default="-", help="TSV from plan-template (default: stdin)")
+    ap.add_argument("--expect-count", type=int, help="how many files are expected")
+    args = ap.parse_args()
+
+    f = sys.stdin if args.infile == "-" else open(args.infile, encoding="utf-8")
+    reader = csv.DictReader(f, delimiter="\t")
+    missing = REQUIRED_COLUMNS - set(reader.fieldnames or [])
+    if missing:
+        sys.exit(f"the table is missing columns: {', '.join(sorted(missing))}\n"
+                 "It must be a TSV produced by plan-template.")
+    rows = list(reader)
+    name = lambda r: os.path.basename(r["path"])
+
+    blockers, warnings = [], []
+
+    if args.expect_count is not None and len(rows) != args.expect_count:
+        blockers.append(f"{len(rows)} rows in the plan, expected {args.expect_count}")
+
+    # An untouched skeleton from plan-template means the numbering was never done.
+    unfilled = [r for r in rows if r["confidence"].strip() not in VALID_CONFIDENCE]
+    if unfilled:
+        blockers.append(f"{len(unfilled)} rows are not filled in "
+                        f"(confidence must be high/medium/uncertain):")
+        blockers += [f"    {name(r)}" for r in unfilled[:10]]
+        if len(unfilled) > 10:
+            blockers.append(f"    ... and {len(unfilled) - 10} more")
+
+    no_number = [r for r in rows if r["new_e"].strip() in UNSET]
+    if no_number:
+        warnings.append(f"{len(no_number)} files have no number and will be left alone:")
+        warnings += [f"    {name(r)}  ({r['why']})" for r in no_number]
+
+    # season -> episode number -> [files]
+    seasons = defaultdict(lambda: defaultdict(list))
+    no_season, malformed = [], []
+    for r in rows:
+        if r["new_e"].strip() in UNSET:
+            continue
+        if r["new_s"].strip() in UNSET:
+            no_season.append(r)
+            continue
+        try:
+            start, season = int(r["new_e"]), int(r["new_s"])
+            end = int(r["new_e_end"]) if r["new_e_end"].strip() not in UNSET else start
+        except ValueError:
+            malformed.append(r)
+            continue
+        if end < start:
+            malformed.append(r)
+            continue
+        for n in range(start, end + 1):
+            seasons[season][n].append(name(r))
+
+    if malformed:
+        blockers.append(f"{len(malformed)} rows have non-numeric or nonsensical numbers:")
+        blockers += [f"    {name(r)}  (s={r['new_s']!r} e={r['new_e']!r} end={r['new_e_end']!r})"
+                     for r in malformed]
+    if no_season:
+        blockers.append(f"{len(no_season)} files have an episode number but no season:")
+        blockers += [f"    {name(r)}" for r in no_season]
+
+    for s in sorted(seasons):
+        nums = sorted(seasons[s])
+        print(f"Season {s}: {len(nums)} numbers, range {nums[0]}..{nums[-1]}")
+
+        dupes = {n: files for n, files in seasons[s].items() if len(files) > 1}
+        if dupes:
+            blockers.append(f"season {s}: duplicate numbers:")
+            blockers += [f"    E{n:03d} <- {', '.join(files)}" for n, files in sorted(dupes.items())]
+
+        if nums[0] != 1:
+            warnings.append(f"season {s}: numbering starts at {nums[0]}, not 1")
+        gaps = sorted(set(range(nums[0], nums[-1] + 1)) - set(nums))
+        if gaps:
+            warnings.append(f"season {s}: gaps in numbering: {gaps}")
+
+    for level in ("uncertain", "medium"):
+        flagged = [r for r in rows
+                   if r["confidence"].strip() == level and r["new_e"].strip() not in UNSET]
+        if flagged:
+            warnings.append(f"{len(flagged)} rows marked {level} — review these by eye:")
+            warnings += [f"    {name(r)}  -> S{r['new_s']}E{r['new_e']}  ({r['why']})" for r in flagged]
+
+    print()
+    for w in warnings:
+        print(w if w.startswith("    ") else f"WARN  {w}")
+    for b in blockers:
+        print(b if b.startswith("    ") else f"BLOCK {b}")
+
+    if blockers:
+        print("\nBlocker present — do not write.")
+        return 1
+    print(f"\nOK: {len(rows)} rows, no blockers"
+          + (f", {len(warnings)} warnings" if warnings else ""))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

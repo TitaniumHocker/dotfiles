@@ -103,8 +103,10 @@ cmp.setup {
         behavior = cmp.ConfirmBehavior.Replace,
         select = false,
     },
+    -- view = {
+    --     entries = "native"
+    -- },
     experimental = {
         ghost_text = true,
-        native_menu = false,
     },
 }

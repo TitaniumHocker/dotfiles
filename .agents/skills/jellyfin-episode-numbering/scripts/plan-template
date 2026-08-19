@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+"""Print the skeleton of the numbering table. Assigns no numbers — you fill them in.
+
+    list-episodes "Show name" > ep.json
+    plan-template ep.json > plan.tsv      # skeleton with full paths
+    # <- fill new_s / new_e / confidence / why by reading the paths
+    validate plan.tsv
+    apply --plan plan.tsv --items ep.json --dry-run
+
+There are deliberately no filename regexes here. Release-group naming schemes are
+mutually incompatible; a fixed parser eventually fails silently, and a silent error
+is worse than a refusal here. Paths are read by a model (or a human); the table is
+how that decision gets reviewed before anything is written.
+
+Columns:
+    id           Jellyfin item id, leave alone
+    cur_s cur_e  what Jellyfin has now, "-" = unset. Reference only
+    cur_name     current title, usually junk from the filename or audio track
+    new_s new_e  FILL IN: season and episode number
+    new_e_end    for double episodes (21-22 -> new_e=21, new_e_end=22), else "-"
+    new_name     OPTIONAL: episode title. Empty -> apply decides on its own
+    confidence   FILL IN: high | medium | uncertain
+    why          FILL IN: what the decision rests on; for uncertain, what the doubt is
+    path         full path, leave alone. The season number often lives in the folder name
+"""
+import argparse
+import json
+import os
+import re
+import sys
+from collections import defaultdict
+
+COLUMNS = ["id", "cur_s", "cur_e", "cur_name", "new_s", "new_e", "new_e_end", "new_name",
+           "confidence", "why", "path"]
+
+# Anything in a folder name that states which season it is.
+SEASON_HINT = re.compile(
+    r"season\s*\d|сезон\s*\d|\bs\d{1,2}\b|\b\d+(?:st|nd|rd|th)\b"
+    r"|\b(?:part|cour|стадия)\s*\d|\s\d\s*(?:-|$)",
+    re.IGNORECASE,
+)
+
+# Jellyfin's own placeholder for an untitled episode, in any UI language.
+PLACEHOLDER_TITLE = re.compile(r"^(эпизод|серия|episode|ep|folge|episodio)\s*\d+([.,]\d+)?$", re.I)
+
+
+def warn_about_titles(items):
+    """Shout when the existing titles look like real ones worth keeping."""
+    titles = [(i.get("Name") or "").strip() for i in items]
+    real = {t for t in titles if t and not PLACEHOLDER_TITLE.match(t)}
+    # Real titles differ per episode; junk from a filename or audio track repeats.
+    if len(items) < 3 or len(real) < len(items) * 0.6:
+        return
+
+    print(f"\nNOTE: {len(real)} distinct episode titles already exist, e.g.:", file=sys.stderr)
+    for t in sorted(real)[:3]:
+        print(f"    {t}", file=sys.stderr)
+    print("These look like real titles, not junk. Do NOT let --set-name overwrite them with\n"
+          "«Эпизод N». If they are in another language than the user's, translate them into\n"
+          "the user's language and put the result in new_name.\n", file=sys.stderr)
+
+
+def warn_about_seasons(items):
+    """Shout when the season numbers cannot be derived from the paths at all.
+
+    Franchise folders like `Seishun Buta Yarou wa Santa Claus no Yume wo Minai` carry no
+    season marker whatsoever. Guessing the order from such names means guessing release
+    dates from memory — that is the user's call, not the agent's.
+    """
+    folders = defaultdict(int)
+    for it in items:
+        folders[os.path.dirname(it.get("Path") or "")] += 1
+    if len(folders) < 2:
+        return
+
+    names = {os.path.basename(d): n for d, n in folders.items()}
+    if any(SEASON_HINT.search(n) for n in names):
+        return
+
+    print(f"\nSTOP: {len(names)} folders and not one carries a season number.", file=sys.stderr)
+    for n, count in sorted(names.items(), key=lambda x: -x[1]):
+        kind = "single file — likely a movie/special, not an episode" if count == 1 else f"{count} files"
+        print(f"    [{kind}]  {n}", file=sys.stderr)
+    print("Which folder is which season cannot be read from these paths. Ask the user\n"
+          "before filling new_s — do not infer the order from release dates you recall.\n",
+          file=sys.stderr)
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("infile", nargs="?", default="-", help="JSON from list-episodes (default: stdin)")
+    args = ap.parse_args()
+
+    raw = sys.stdin.read() if args.infile == "-" else open(args.infile, encoding="utf-8").read()
+    data = json.loads(raw)
+    items = data["Items"] if isinstance(data, dict) else data
+    warn_about_seasons(items)
+    warn_about_titles(items)
+
+    print("\t".join(COLUMNS))
+    for it in sorted(items, key=lambda x: x.get("Path") or ""):
+        # jellyroller reports null as 0 — show "-" so it is not mistaken for a real zero
+        print("\t".join([
+            it.get("Id", ""),
+            str(it.get("ParentIndexNumber") or "-"),
+            str(it.get("IndexNumber") or "-"),
+            (it.get("Name") or "").replace("\t", " "),
+            "", "", "-", "", "", "",
+            it.get("Path", ""),
+        ]))
+
+
+if __name__ == "__main__":
+    main()

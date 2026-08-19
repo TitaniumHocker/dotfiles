@@ -9,3 +9,11 @@
 /*~
 __pycache__
 .mypy_cache
+.pi/agent/secrets.json
+.pi/agent/models.json
+.pi/agent/auth.json
+.pi/agent/.env
+.pi/agent/sessions/
+.pi/agent/node_modules/
+
+.config/tmux/plugins
