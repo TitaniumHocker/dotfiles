@@ -24,7 +24,6 @@ local setup = function(name, settings)
     local loaded, lspcmp = pcall(require, "cmp_nvim_lsp")
     if loaded then
         capabilities = lspcmp.default_capabilities(capabilities)
-        -- capabilities = lspcmp.update_capabilities(capabilities) -- deprecated
     end
     vim.lsp.config(name, {
         on_attach = on_attach,

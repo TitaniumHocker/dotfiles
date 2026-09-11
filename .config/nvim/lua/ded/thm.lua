@@ -2,7 +2,6 @@
 
 local themes = {
     gruvbox = function()
-        -- vim.o.background = "dark"
         vim.o.background = "light"
         vim.g.gruvbox_material_transparent_background = 1
         vim.g.gruvbox_material_background = "soft" -- "medium" | "soft" | "hard"
@@ -11,6 +10,10 @@ local themes = {
         vim.g.gruvbox_material_enable_italic = 1
         vim.g.gruvbox_material_disable_italic_comment = 1
         vim.cmd "colorscheme gruvbox-material"
+    end,
+    rosepine = function()
+        vim.o.background = "light"
+        vim.cmd "colorscheme rose-pine"
     end
 }
 

@@ -6,7 +6,32 @@
     },
     "chrome-devtools-mcp": {
       "command": "/usr/bin/chrome-devtools-mcp",
-      "args": ["--executablePath", "/usr/bin/chromium", "--isolated"]
+      "args": [
+        "--executablePath",
+        "/usr/bin/chromium",
+        "--isolated"
+      ]
+    },
+    "gitea": {
+      "command": "/usr/bin/gitea-mcp",
+      "args": [
+        "-t",
+        "stdio"
+      ],
+      "env": {
+        "GITEA_HOST": "!jq -j .gitea_url ~/.pi/agent/secrets.json",
+        "GITEA_ACCESS_TOKEN": "!jq -j .gitea_token ~/.pi/agent/secrets.json",
+        "GITEA_TOOLS": "get_me,get_user_orgs,search_repos,search_users,search_org_teams,notification_read,label_read,attachment_read,list_pull_requests,pull_request_read,pull_request_review_write,pull_request_write,actions_run_read,actions_config_read,actions_run_write,get_file_contents,get_dir_contents,list_my_repos,list_org_repos,get_repository_tree,list_branches,list_tags,get_tag,list_commits,get_commit,list_releases,get_release,get_latest_release"
+      },
+      "directTools": false
+    },
+    "github": {
+      "command": "/usr/bin/github-mcp-server",
+      "args": ["stdio"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "!jq -j .github_pat ~/.pi/agent/secrets.json"
+      },
+      "directTools": false
     }
   }
 }

@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.82.1",
+  "lastChangelogVersion": "0.85.1",
   "theme": "light",
   "packages": [
     "npm:pi-mcp-adapter",
@@ -15,12 +15,16 @@
     "npm:@narumitw/pi-goal",
     "npm:pi-powerline-footer"
   ],
-  "defaultProvider": "ai.ifedorov.me",
-  "defaultModel": "z-ai/glm-5.2",
+  "defaultProvider": "work",
+  "defaultModel": "GLM 5.2 FP8",
   "hideThinkingBlock": true,
   "quietStartup": true,
   "defaultThinkingLevel": "high",
-  "workingVibeModel": "ai.ifedorov.me/logovo/qwen3.6-35b-a3b",
-  "workingVibe": "Supernatural",
-  "enabledModels": []
+  "workingVibeModel": "selfhosted/z-ai/glm-5.2",
+  "workingVibe": "vibecoding",
+  "enabledModels": [],
+  "workingVibeMode": "file",
+  "editorPaddingX": 0,
+  "collapseChangelog": true,
+  "enableInstallTelemetry": false
 }

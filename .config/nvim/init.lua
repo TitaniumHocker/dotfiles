@@ -4,5 +4,5 @@ require "ded.key"  -- Keymaps
 require "ded.ext"  -- Extensions
 
 local colorscheme = require("ded.thm").colorscheme
-colorscheme "gruvbox"
--- colorscheme "rose_pine"
+-- colorscheme "gruvbox"
+colorscheme "rosepine"
