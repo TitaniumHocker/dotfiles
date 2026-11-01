@@ -24,7 +24,3 @@ lg = !"git lg1"
     show-merge = "!sh -c 'merge=$(git find-merge $0 $1) && [ -n \"$merge\" ] && git show $merge'"
 [safe]
 	directory = /srv/nfs/ifedorov/work
-	directory = /srv/nfs/ifedorov/work/rupost
-	directory = /srv/nfs/ifedorov/work/rupost/**
-	directory = /srv/nfs/ifedorov/work/rupost/src/rupost-wizard
-	directory = /srv/nfs/ifedorov/work/rupost/builder/data/packages
