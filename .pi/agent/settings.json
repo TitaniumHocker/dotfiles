@@ -1,8 +1,7 @@
 {
-  "lastChangelogVersion": "0.85.1",
-  "theme": "light",
+  "lastChangelogVersion": "1.4.0",
+  "theme": "system/system",
   "packages": [
-    "npm:pi-mcp-adapter",
     "npm:pi-subagents",
     "npm:context-mode",
     "npm:@dietrichgebert/ponytail",
@@ -13,7 +12,10 @@
     "npm:@gotgenes/pi-permission-system",
     "npm:@juicesharp/rpiv-todo",
     "npm:@narumitw/pi-goal",
-    "npm:pi-powerline-footer"
+    "npm:pi-powerline-footer",
+    "npm:@narumitw/pi-usage",
+    "npm:pi-btw",
+    "npm:@juicesharp/rpiv-i18n"
   ],
   "defaultProvider": "work",
   "defaultModel": "GLM 5.2 FP8",
@@ -26,5 +28,9 @@
   "workingVibeMode": "file",
   "editorPaddingX": 0,
   "collapseChangelog": true,
-  "enableInstallTelemetry": false
+  "enableInstallTelemetry": false,
+  "extensions": [
+    "-builtin:mcp",
+    "~/.pi/agent/local-extensions"
+  ]
 }
