@@ -6,3 +6,4 @@ require "ded.ext"  -- Extensions
 local colorscheme = require("ded.thm").colorscheme
 -- colorscheme "gruvbox"
 colorscheme "rosepine"
+colorscheme "po2mood"

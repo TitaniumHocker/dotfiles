@@ -14,6 +14,10 @@ local themes = {
     rosepine = function()
         vim.o.background = "light"
         vim.cmd "colorscheme rose-pine"
+    end,
+    po2mood = function()
+        vim.o.background = "light"
+        vim.cmd "colorscheme po2mood"
     end
 }
 

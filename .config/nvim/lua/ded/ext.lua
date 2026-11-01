@@ -7,6 +7,7 @@ vim.pack.add({
     -- Themes
     "https://github.com/sainnhe/gruvbox-material",      -- Old good gruvbox
     {src = "https://github.com/rose-pine/neovim", name = "rose-pine"},
+    'https://github.com/TitaniumHocker/po2mood',
 
     -- Tweaks
     "https://github.com/windwp/nvim-autopairs",         -- Autopairs, integrates with cmp and treesitter
